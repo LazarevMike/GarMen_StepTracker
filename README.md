@@ -38,3 +38,27 @@ This repository contains the Arduino code for the **Step Tracker System** using 
 ---
 
 ## Folder Structure
+- **code** - folder with code folders and files
+- **SolidWorks** - folder for SolidWorks models, assemblies and drawings
+
+---
+
+### Description of Files in code/Step_Tracker:
+
+- **StepTrackerProject.ino**: The main Arduino sketch file where the `setup()` and `loop()` functions are defined. This file handles the initialization and continuous operations of the step tracker.
+  
+- **SensorManager.h / SensorManager.cpp**: The header and source files responsible for handling sensor-related tasks, such as reading values from a step sensor (e.g., accelerometer or pedometer).
+  
+- **DisplayManager.h / DisplayManager.cpp**: The header and source files for managing the LCD display. This includes functions to display step count and other relevant information to the user.
+  
+- **StepCounter.h / StepCounter.cpp**: The header and source files for step counting logic. This includes functions that calculate the number of steps based on sensor data.
+  
+- **Config.h**: A configuration file that contains constants and settings used across the project, such as sensor thresholds and display settings.
+
+## Usage
+
+1. Open the `StepTrackerProject.ino` file in the Arduino IDE or another compatible editor.
+2. Connect the Arduino Nano ESP32 to your computer.
+3. Select the correct board and port in the Arduino IDE.
+4. Upload the code to the Arduino board.
+5. The system should start reading sensor data and display step count on the LCD screen.
