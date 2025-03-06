@@ -27,7 +27,7 @@ This repository contains the Arduino code for the **Step Tracker System** using 
 - **Arduino Nano ESP32**
 - **ADXL335 Accelerometer (Breakout PCB)**
 - **Custom PCB Shield**
-- **LCD Screen with I2C Backpack**
+- **1.69" LCD**
 - **LEDs:** Power indicator, pace indicators
 - **Buttons:** User input for calibration and reset
 - **Power Supplies:** External DC and battery
