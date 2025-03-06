@@ -37,4 +37,4 @@ This repository contains the Arduino code for the **Step Tracker System** using 
 
 ---
 
-## 🗂 Folder Structure
+## Folder Structure
