@@ -10,7 +10,7 @@
   Has methods to test LEDs, nothing else yet.
 */
 
-class UserInterface{
+class UserInterface {
   public:
     /*
     Constructor of the class.
