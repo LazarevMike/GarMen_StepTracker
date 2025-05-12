@@ -26,3 +26,34 @@ void UserInterface::testLeds() {
     }
   }
 }
+
+bool UserInterface::isResetPressed() {
+  return RESET_BTN_.isPressed();
+}
+
+bool UserInterface::isStartPressed() {
+  return START_BTN_.isPressed();
+}
+
+bool UserInterface::isCalibPressed() {
+  return CALIB_BTN_.isPressed();
+}
+
+std::vector<bool> UserInterface::buttonsStates() {
+  std::vector<bool> states;
+  states.push_back(RESET_BTN_.getState());
+  states.push_back(START_BTN_.getState());
+  states.push_back(CALIB_BTN_.getState());
+}
+
+bool UserInterface::getResetState() {
+  return digitalRead(21);
+}
+
+bool UserInterface::getStartState() {
+  return digitalRead(26);
+}
+
+bool UserInterface::getCalibState() {
+  return digitalRead(33);
+}

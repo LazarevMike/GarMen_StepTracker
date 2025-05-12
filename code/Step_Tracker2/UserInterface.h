@@ -3,6 +3,7 @@
 
 #include "Led.h"
 #include "Button.h"
+#include <vector>
 
 /*
   Class for User Interface.
@@ -31,6 +32,15 @@ class UserInterface {
     Blinks all the leds 5 times in a sequence  using delay (not asynchronous function)
     */
     void testLeds();
+
+    bool isResetPressed();
+    bool isStartPressed();
+    bool isCalibPressed();
+    std::vector<bool> buttonsStates();
+
+    bool getResetState();
+    bool getStartState();
+    bool getCalibState();
 
   private:
     // All the Led objects in the UI
