@@ -8,6 +8,14 @@
   Class for User Interface.
   Keeps all the UI elements, including LEDs, Buttons and LCD display as fields.
   Has methods to test LEDs, nothing else yet.
+
+  The pins for components dictated by hardware are as following:
+    Blue LED: 35
+    Orange LED: 36
+    Green LED: 37
+    Reset button: 21
+    Start/Pause button: 26
+    Calibration button: 33
 */
 
 class UserInterface {
