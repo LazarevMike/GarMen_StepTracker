@@ -6,32 +6,35 @@ unsigned int last_trigger = 0;
 
 void setup() {
   Serial.begin(115200);
-  //adxl.stOn();
 
 }
 
 void loop() {
   //Serial.print("Current X: ");
-  Serial.print(0);       // lower bound
+  Serial.print(-3.6);       // lower bound
   Serial.print("\t");
-  Serial.print(4096);    // upper bound
+  Serial.print(3.6);    // upper bound
   Serial.print("\t");
-  Serial.print(adxl.readX());
+  //Serial.print(adxl.readX());
+  Serial.print(adxl.convertADCtoAccel(adxl.readX()));
   Serial.print("\t");
-  Serial.print(adxl.readY());
+  //Serial.print(adxl.readY());
+  Serial.print(adxl.convertADCtoAccel(adxl.readY()));
   Serial.print("\t");
-  Serial.println(adxl.readZ());
+  //Serial.println(adxl.readZ());
+  Serial.println(adxl.convertADCtoAccel(adxl.readZ()));
+
+  // int x = adxl.readX();
+  // int y = adxl.readY();
+  // if (x == y) {
+  //   Serial.print("\t");
+  //   Serial.println(x);
+  // }
   delay(50);
 
   // if (millis() - last_trigger > 1000) {
-  //   if (adxl.getStState()) {
-  //     adxl.stOff();
-  //   }
-  //   else {
-  //     adxl.stOn();
-  //   }
+  //   adxl.triggerSt(!adxl.getStState());
   //   last_trigger = millis();
-
   // }
 
 }

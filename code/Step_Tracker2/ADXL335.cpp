@@ -1,36 +1,40 @@
 #include "ADXL335.h"
 #include "Arduino.h"
 
-ADXL335::ADXL335(int x_pin, int y_pin, int z_pin, int st_pin) : x_pin_(x_pin), y_pin_(y_pin), z_pin_(z_pin), st_pin_(st_pin) {
-  pinMode(x_pin_, INPUT);
-  pinMode(y_pin_, INPUT);
-  pinMode(z_pin_, INPUT);
-  pinMode(st_pin_, OUTPUT);
-  stOff();
+ADXL335::ADXL335(int x_pin, int y_pin, int z_pin, int st_pin) : X_PIN_(x_pin), Y_PIN_(y_pin), Z_PIN_(z_pin), ST_PIN_(st_pin) {
+  pinMode(X_PIN_, INPUT);
+  pinMode(Y_PIN_, INPUT);
+  pinMode(Z_PIN_, INPUT);
+  pinMode(ST_PIN_, OUTPUT);
+  triggerSt(false);
 }
 
 int ADXL335::readX() {
-  return analogRead(x_pin_);
+  //The return value in inverted reading
+  //Inversion is required as the output from hardaware is inverted.
+  return 4095 - ADC_OFFSET_ * 2 - analogRead(X_PIN_);
 }
 
 int ADXL335::readY() {
-  return analogRead(y_pin_);
+  return analogRead(Y_PIN_);
 }
 
 int ADXL335::readZ() {
-  return analogRead(y_pin_);
+  return analogRead(Z_PIN_);
 }
 
-void ADXL335::stOn() {
-  digitalWrite(st_pin_, LOW);
-  st_state_ = true;
-}
-
-void ADXL335::stOff() {
-  digitalWrite(st_pin_, HIGH);
-  st_state_ = false;
+void ADXL335::triggerSt(bool new_state) {
+  st_state_ = new_state;
+  //Inverted because by design st pin driver is active low
+  digitalWrite(ST_PIN_, !st_state_);
+  
 }
 
 bool ADXL335::getStState() {
   return st_state_;
+}
+
+float ADXL335::convertADCtoAccel(int adc_reading) {
+  float voltage = (adc_reading + ADC_OFFSET_)/4095.0 * 3.3;
+  return (voltage - 1.65) / SENSITIVITY_;
 }
