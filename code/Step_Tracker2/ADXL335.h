@@ -13,7 +13,7 @@ class ADXL335 {
   public:
     /*
     Constructor for the object.
-    Sets class properties for pins, does pinModes and disables st pin.
+    Sets class fields for pins, does pinModes and disables st pin.
     */ 
     ADXL335(int x_pin, int y_pin, int z_pin, int st_pin);      // Constructor
     
