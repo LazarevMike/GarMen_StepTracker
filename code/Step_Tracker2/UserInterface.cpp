@@ -27,6 +27,17 @@ void UserInterface::testLeds() {
   }
 }
 
+void UserInterface::testButtons() {
+  unsigned int time = 0;
+  while (time < 10000) {
+    time = millis();
+    triggerBlue(getResetState());
+    triggerOrange(getStartState());
+    triggerGreen(getCalibState());
+    delay(50);
+  }
+}
+
 bool UserInterface::isResetPressed() {
   return RESET_BTN_.isPressed();
 }
@@ -41,19 +52,31 @@ bool UserInterface::isCalibPressed() {
 
 std::vector<bool> UserInterface::buttonsStates() {
   std::vector<bool> states;
-  states.push_back(RESET_BTN_.getState());
-  states.push_back(START_BTN_.getState());
-  states.push_back(CALIB_BTN_.getState());
+  states.push_back(getResetState());
+  states.push_back(getStartState());
+  states.push_back(getCalibState());
 }
 
 bool UserInterface::getResetState() {
-  return digitalRead(21);
+  return RESET_BTN_.getState();
 }
 
 bool UserInterface::getStartState() {
-  return digitalRead(26);
+  return START_BTN_.getState();
 }
 
 bool UserInterface::getCalibState() {
-  return digitalRead(33);
+  return CALIB_BTN_.getState();
+}
+
+void UserInterface::triggerBlue(bool new_state) {
+  BLUE_LED_.triggerLed(new_state);
+}
+
+void UserInterface::triggerOrange(bool new_state) {
+  ORANGE_LED_.triggerLed(new_state);
+}
+
+void UserInterface::triggerGreen(bool new_state) {
+  GREEN_LED_.triggerLed(new_state);
 }

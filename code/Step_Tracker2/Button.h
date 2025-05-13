@@ -9,7 +9,7 @@ class Button {
 
   private:
     const int PIN_;
-    bool state_;
+    bool last_state_;
 
     const int DEBOUNCE_ = 20;
     unsigned int last_press_;

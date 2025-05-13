@@ -33,6 +33,8 @@ class UserInterface {
     */
     void testLeds();
 
+    void testButtons();
+
     bool isResetPressed();
     bool isStartPressed();
     bool isCalibPressed();
@@ -41,6 +43,10 @@ class UserInterface {
     bool getResetState();
     bool getStartState();
     bool getCalibState();
+
+    void triggerBlue(bool new_state);
+    void triggerOrange(bool new_state);
+    void triggerGreen(bool new_state);
 
   private:
     // All the Led objects in the UI

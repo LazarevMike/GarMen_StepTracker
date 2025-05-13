@@ -15,33 +15,9 @@ void setup() {
 }
 
 void loop() {
-  //ui.testLeds();
-  Serial.print(ui.getResetState());
-  Serial.print("\t");
-  Serial.print(ui.getStartState());
-  Serial.print("\t");
-  Serial.println(ui.getCalibState());
-  // for (bool sta : ui.buttonsStates()) {
-  //   Serial.println(sta);
-  // }
-  // if (ui.isResetPressed()) {
-  //   counter1++;
-  //   Serial.print("RESET button was pressed ");
-  //   Serial.println(counter1);
-  // }
-  // if (ui.isStartPressed()) {
-  //   counter2++;
-  //   Serial.print("START button was pressed ");
-  //   Serial.println(counter2);
-  // }
-  // if (ui.isCalibPressed()) {
-  //   counter3++;
-  //   Serial.print("CALIBRATION button was pressed ");
-  //   Serial.println(counter3);
-  // }
+  ui.testLeds();
+  //ui.testButtons();  
 
-  delay(200);
-  
 
 
   // //Serial.print("Current X: ");
