@@ -15,8 +15,8 @@ void setup() {
 }
 
 void loop() {
-  ui.testLeds();
-  //ui.testButtons();  
+  //ui.testLeds();
+  ui.testButtons();  
 
 
 

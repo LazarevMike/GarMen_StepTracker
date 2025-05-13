@@ -45,7 +45,7 @@ void setup() {
   analogReadResolution(12);  // Full 12-bit resolution
 
   tft.init(240, 280);
-  tft.setRotation(1);
+  tft.setRotation(3);
   tft.fillScreen(ST77XX_BLACK);
 
   // Print title
