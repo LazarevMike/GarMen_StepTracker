@@ -2,81 +2,80 @@
 #define LCD_H
 
 #include <Arduino.h>
-#include <TFT_eSPI.h>                    // TFT display library
-#include "StepCounter.h"                 // Step tracking module
-#include "HeartRateMonitor.h"           // BLE heart rate module
-#include "CaloriesCalculator.h"         // Calorie calculation module
+#include <TFT_eSPI.h>  // Graphics library for TFT display
+#include "StepCounter.h"
+#include "HeartRateMonitor.h"
+#include "CaloriesCalculator.h"
 
-/*
-   Enum representing the two main UI states of the screen:
-   - StepsScreen: shows total steps, steps/min, and goal progress
-   - StatsScreen: shows heart rate and calories burned
-*/
+// Enum to track which screen is currently being displayed
 enum class DisplayState {
-    StepsScreen,
-    StatsScreen
+    StepsScreen,  // Screen showing step data and pace
+    StatsScreen   // Screen showing heart rate and calories
 };
 
-/*
-   Lcd class manages UI rendering on the TFT screen.
-   It displays real-time stats including steps, pace, heart rate, calories,
-   and Bluetooth connection status.
-
-   This class pulls data from StepCounter, HeartRateMonitor, and CaloriesCalculator.
-*/
+// Lcd class handles all screen-related logic and drawing
 class Lcd {
 public:
-    /*
-       Constructor that links this display class to the data providers.
-       Takes references to:
-       - stepCounter: step tracking logic
-       - hrMonitor: BLE heart rate monitor
-       - calCalc: calorie calculator
-    */
+    // Constructor: accepts references to other modules
     Lcd(StepCounter& stepCounter, HeartRateMonitor& hrMonitor, CaloriesCalculator& calCalc);
 
-    // Initializes the TFT display (rotation, background, default text settings)
+    // Initializes the TFT screen
     void begin();
 
-    // Switches screen state (StepsScreen or StatsScreen) and redraws if changed
+    // Switches to a new display state (StepsScreen or StatsScreen)
     void display(DisplayState newState);
 
-    // Fetches and stores step data: count, steps per minute, and pace
+private:
+    // Gathers and updates current step data from StepCounter
     void setStepData();
 
-    // Retrieves current heart rate (BPM) from heart rate monitor
+    // Retrieves the latest BPM from HeartRateMonitor
     void setHeartRate();
 
-    // Retrieves total calories burned from calculator
+    // Retrieves total burned calories from CaloriesCalculator
     void setCalories();
 
-    // Updates BLE connection status for display
+    // Updates the BLE connection status
     void bluetoothStatus();
 
-    // Draws a top bar UI element with logo, BLE status, battery, and timer
+    // Draws top UI bar: app name, BLE status, battery, time
     void drawCommonUI();
 
-private:
-    DisplayState currentState;  // Tracks which screen is currently shown
+    // Switches between walk and idle state images
+    void updateStateImage();
 
-    // Cached values used for display rendering
-    int stepCount;
-    float stepsPerMinute;
-    int bpm;
-    int calories;
-    bool statusBLE;
-    Pace pace;  // Current detected pace (Idle, Walk, Run)
+    // Renders the steps and pace screen
+    void showStepsScreen();
 
-    // References to external data sources (passed in via constructor)
+    // Renders the heart rate and calorie stats screen
+    void showStatsScreen();
+
+    // Displays correct Bluetooth icon (connected or not)
+    void bluetoothStateImage();
+
+    // Renders battery icon based on a simulated percentage
+    void batteryLevel();
+
+    // -------------------- Member Variables --------------------
+
+    DisplayState currentState;   // Tracks which screen is currently shown
+
+    int stepCount;               // Current step count
+    float stepsPerMinute;        // Steps per minute (pace)
+    int bpm;                     // Heart rate in BPM
+    int calories;                // Calories burned
+    bool statusBLE;              // BLE connection status
+    Pace pace;                   // Current user pace (IDLE, WALK, RUN)
+
+    // References to other modules (no ownership)
     StepCounter& stepCounter;
     HeartRateMonitor& hrMonitor;
     CaloriesCalculator& calCalc;
 
-    // Renders the StepsScreen with step data
-    void showStepsScreen();
-
-    // Renders the StatsScreen with heart rate and calories
-    void showStatsScreen();
+    // For timing display switching and animations
+    unsigned long lastSwitchTime;   // For animation/image switching
+    unsigned long lastBatteryTime;  // For updating battery icon
+    bool isRunning;                 // Toggles animation state (walk/idle)
 };
 
 #endif // LCD_H

@@ -1,19 +1,30 @@
-#include "Lcd.h"
-#include "Arduino.h"
+#include "Lcd.h"  // Include header for Lcd class
 
-#include <math.h>  // For future vector calculations, e.g., battery or pace indicators
-#include "media/whiterun_rgb565_fixed.h"
-#include "media/idle_white_on_black_80x88.h"
-#include "media/flame_icon.h"
+// Graphics and display libraries
+#include <Adafruit_GFX.h>
+#include <Adafruit_ST7789.h>
+#include <math.h>
 
-// Global TFT display instance
-TFT_eSPI tft = TFT_eSPI();
+// Icons and images used on the display
+#include "media/runIcon.h"
+#include "media/walkIcon.h"
+#include "media/idleIcon.h"
+#include "media/flameIconSmall.h"
+#include "media/heartIcon.h"
+#include "media/bluetoothNotConnectedIcon.h"
+#include "media/bluetoothConnectedIcon.h"
+#include "media/flameIconBig.h"
+#include "media/batteryIcon.h"
 
-/*
-   Constructor: Initializes internal state for the display,
-   stores references to external modules for sensor data access,
-   and sets initial values for all UI elements.
-*/
+// Define display control pins
+#define TFT_CS   5
+#define TFT_RST  6
+#define TFT_DC   7
+
+// Initialize the TFT display object
+Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST);
+
+// Constructor to link external data sources (step counter, HR monitor, calorie tracker)
 Lcd::Lcd(StepCounter& stepCounter, HeartRateMonitor& hrMonitor, CaloriesCalculator& calCalc)
     : currentState(DisplayState::StepsScreen),
       stepCount(0),
@@ -24,57 +35,45 @@ Lcd::Lcd(StepCounter& stepCounter, HeartRateMonitor& hrMonitor, CaloriesCalculat
       pace(Pace::IDLE),
       stepCounter(stepCounter),
       hrMonitor(hrMonitor),
-      calCalc(calCalc) {}
+      calCalc(calCalc),
+      lastSwitchTime(0),
+      lastBatteryTime(0),
+      isRunning(true) {}
 
-/*
-   Initializes the TFT display, sets rotation,
-   background color, and default text formatting.
-*/
+// Initialize the TFT display
 void Lcd::begin() {
-    tft.init();
-    tft.setRotation(1);
-    tft.fillScreen(TFT_BLACK);
-    tft.setTextColor(TFT_WHITE, TFT_BLACK);
+    tft.init(240, 280);         // Set screen dimensions
+    tft.setRotation(3);         // Landscape orientation
+    tft.fillScreen(ST77XX_BLACK);
+    tft.setTextColor(ST77XX_WHITE);
+    tft.setTextWrap(false);
 }
 
-/*
-   Pulls step-related data from StepCounter and updates internal variables.
-   This includes total step count, step rate (SPM), and current pace.
-*/
+// Update step-related data from StepCounter
 void Lcd::setStepData() {
     stepCount = stepCounter.getStepCount();
     stepsPerMinute = stepCounter.getStepsPerMinute();
     pace = stepCounter.getPace();
 }
 
-/*
-   Updates the latest heart rate (BPM) value from HeartRateMonitor.
-*/
+// Update current heart rate from HR monitor
 void Lcd::setHeartRate() {
     bpm = hrMonitor.getLatestBPM();
 }
 
-/*
-   Fetches the total calories burned so far from CaloriesCalculator.
-*/
+// Update total calories burned
 void Lcd::setCalories() {
     calories = calCalc.getTotal();
 }
 
-/*
-   Updates the status of the BLE connection from HeartRateMonitor.
-   Used for showing BLE indicator in the UI.
-*/
+// Update BLE connection status
 void Lcd::bluetoothStatus() {
     statusBLE = hrMonitor.isConnected();
 }
 
-/*
-   Changes the screen to display either step tracking info or health stats.
-   Prevents redundant redraws if the state hasn't changed.
-*/
+// Change screen based on state (steps/stats)
 void Lcd::display(DisplayState newState) {
-    if (newState == currentState) return;
+    if (newState == currentState) return;  // Prevent unnecessary redraw
 
     currentState = newState;
 
@@ -88,80 +87,111 @@ void Lcd::display(DisplayState newState) {
     }
 }
 
-/*
-   Renders the step tracking interface:
-   - Shows total steps taken
-   - Step goal progress (/10000)
-   - Step rate (steps per minute)
-*/
+// Draw step tracking screen with SPM, step count, and icon
 void Lcd::showStepsScreen() {
-    tft.fillScreen(TFT_BLACK);
-    tft.setTextSize(2);
+    tft.fillScreen(ST77XX_BLACK);
+    drawCommonUI();          // Optional top bar with time/BLE
 
-    tft.setCursor(10, 10);
-    tft.print("Steps");
+    setStepData();           // Load data from StepCounter
+
+    updateStateImage();      // Animate walk/idle icon
 
     tft.setTextSize(4);
-    tft.setCursor(10, 40);
-    tft.printf("%05d", stepCount);  // Display with leading zeros (up to 5 digits)
+    tft.setCursor(80, 130);
+    tft.printf("%05d", stepCount);
+
+    tft.setTextSize(2.5);
+    tft.setCursor(100, 170);
+    tft.print("/10000");
 
     tft.setTextSize(2);
-    tft.setCursor(10, 100);
-    tft.print("/10000");  // Fixed goal display
+    tft.setCursor(85, 200);
+    tft.printf("SPM %.1f", stepsPerMinute);
 
-    tft.setCursor(10, 130);
-    tft.printf("Steps/min: %.1f", stepsPerMinute);  // SPM with 1 decimal
+    tft.drawRGBBitmap(170, 197, flame_small_img, 19, 19);  // Flame icon next to SPM
 }
 
-/*
-   Renders the stats screen:
-   - Displays heart rate in BPM
-   - Displays calories burned
-*/
+// Draw stats screen with heart rate and calories
 void Lcd::showStatsScreen() {
-    tft.fillScreen(TFT_BLACK);
-    tft.setTextSize(2);
+    tft.fillScreen(ST77XX_BLACK);
+    drawCommonUI();          // Optional top bar with time/BLE
 
-    tft.setCursor(10, 10);
-    tft.print("HR: ");
+    setHeartRate();          // Get BPM
+    setCalories();           // Get kcal
+
+    tft.drawRGBBitmap(25, 82, heart_img, 49, 49);
+    tft.setTextSize(5);
+    tft.setCursor(80, 90);
+    tft.printf("HR:%d", bpm);
+
+    tft.drawRGBBitmap(25, 142, flame_big_img, 30, 36);
     tft.setTextSize(4);
-    tft.setCursor(60, 10);
-    tft.printf("%d bpm", bpm);
-
-    tft.setTextSize(2);
-    tft.setCursor(10, 80);
-    tft.print("Calories:");
-
-    tft.setTextSize(3);
-    tft.setCursor(10, 110);
-    tft.printf("%d kcal", calories);
+    tft.setCursor(70, 150);
+    tft.printf("kCal:%d", calories);
 }
 
-/*
-   Draws shared UI elements that remain consistent across all screens:
-   - Logo on the left
-   - Bluetooth status indicator
-   - Battery status (hardcoded for now)
-   - Timer showing system uptime in MM:SS
-*/
+// Draw top bar with app name, BLE status, battery, and runtime clock
 void Lcd::drawCommonUI() {
-    tft.fillRect(0, 0, 240, 20, TFT_DARKGREY);  // Top bar background
+    bluetoothStatus();  // Update BLE connection state
 
-    // Logo area
-    tft.setCursor(5, 2);
-    tft.setTextColor(TFT_WHITE, TFT_DARKGREY);
-    tft.print("LOGO");
+    tft.setTextSize(2);
+    tft.setCursor(105, 20);
+    tft.print("GarMen");  // App title
 
-    // Bluetooth connection status
-    tft.setCursor(80, 2);
-    tft.print(statusBLE ? "BLE: OK" : "BLE: --");
+    bluetoothStateImage();  // Draw BLE icon
 
-    // Static battery level (replace with actual sensor later)
-    tft.setCursor(160, 2);
-    tft.print("BAT: 95%");
+    tft.drawRGBBitmap(220, 10, battery_img, 52, 52);
+    batteryLevel();  // Draw battery fill bars
 
-    // Elapsed time since power-on (uptime)
-    tft.setCursor(200, 2);
+    // Runtime timer
+    tft.setTextSize(2);
+    tft.setCursor(10, 20);
     unsigned long seconds = millis() / 1000;
     tft.printf("%02lu:%02lu", seconds / 60, seconds % 60);
+}
+
+// Draw BLE connection icon depending on connection state
+void Lcd::bluetoothStateImage() {
+    if (statusBLE == true) {
+        tft.drawRGBBitmap(15, 200, bluetooth_img, 32, 32);
+    } else {
+        tft.drawRGBBitmap(15, 200, noBluetooth_img, 32, 32);
+    }
+}
+
+// Switches between walk and idle icons every 5s
+void Lcd::updateStateImage() {
+    if (millis() - lastSwitchTime >= 5000) {
+        lastSwitchTime = millis();
+        isRunning = !isRunning;
+
+        int xImg = (280 - 80) / 2;
+        int yImg = 40;
+        tft.fillRect(xImg, yImg, 80, 90, ST77XX_BLACK);  // Clear previous image
+        const uint16_t* img = isRunning ? walk_img : idle_img;
+        int h = isRunning ? 82 : 88;
+        tft.drawRGBBitmap(xImg, yImg, img, 80, h);
+    }
+}
+
+// Simulates battery indicator with 3 blocks
+void Lcd::batteryLevel() {
+    int batteryPercentage = 45;  // Hardcoded for now, can be made dynamic
+
+    if (batteryPercentage < 33) {
+        // Low: only 1 bar
+        tft.fillRect(223, 26, 12, 20, ST77XX_WHITE);
+        tft.fillRect(237, 26, 12, 20, ST77XX_BLACK);
+        tft.fillRect(251, 26, 12, 20, ST77XX_BLACK);
+    } else if (batteryPercentage >= 33 && batteryPercentage < 66) {
+        // Medium: 2 bars
+        tft.fillRect(223, 26, 12, 20, ST77XX_WHITE);
+        tft.fillRect(237, 26, 12, 20, ST77XX_WHITE);
+        tft.fillRect(251, 26, 12, 20, ST77XX_BLACK);
+    } else if (batteryPercentage >= 66 && batteryPercentage <= 100) {
+        // Full: all 3 bars
+        tft.fillRect(223, 26, 12, 20, ST77XX_WHITE);
+        tft.fillRect(237, 26, 12, 20, ST77XX_WHITE);
+        tft.fillRect(251, 26, 12, 20, ST77XX_WHITE);
+    }
 }

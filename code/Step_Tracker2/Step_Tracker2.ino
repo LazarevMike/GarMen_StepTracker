@@ -1,73 +1,42 @@
-#include "ADXL335.h"
-#include "UserInterface.h"
 #include <Arduino.h>
 #include "HeartRateMonitor.h"
 #include "CaloriesCalculator.h"
+#include "StepCounter.h"
+#include "Lcd.h"
 
-
-ADXL335 adxl(8, 13, 9, 34);
-UserInterface ui(35, 36, 37, 21, 26, 33);
-unsigned int last_trigger = 0;
-int counter1 = 0;
-int counter2 = 0;
-int counter3 = 0;
-
-
+// Required modules
 HeartRateMonitor hrMonitor;
-float totalCalories = 0.0f;
-unsigned long lastCalcTime = 0;
-const float userWeightKg = 90.0f;
-const int userAge = 22;
+StepCounter dummyStepCounter;  // Placeholder for now
+CaloriesCalculator calCalc;
+Lcd lcd(dummyStepCounter, hrMonitor, calCalc);
 
+// Timer for screen switching
+unsigned long lastSwitchTime = 0;
+bool showStats = false;
 
 void setup() {
-    Serial.begin(115200);
-    delay(500);
-    Serial.println("Starting BLE Heart Rate Monitor...");
-    hrMonitor.begin();
+  Serial.begin(115200);
+  hrMonitor.begin();
+  lcd.begin();  // Initialize display
 }
 
 void loop() {
-  //ui.testLeds();
-  ui.testButtons();  
+  hrMonitor.update();                   // Check BLE for BPM updates
+  CaloriesCalculator::update(hrMonitor);  // ✅ Pass the object explicitly
 
-  // Test Script for HR + Calories
-  hrMonitor.update();
-  // Every 30 seconds, update calorie burn
   unsigned long now = millis();
-  if (now - lastCalcTime >= 30000) {
-      lastCalcTime = now;
-
-      int bpm = hrMonitor.getLatestBPM();
-      float intervalKcal = CaloriesCalculator::calculateTotal(bpm, userWeightKg, userAge, 0.5f);
-      float totalKcal = CaloriesCalculator::updateTotalCalories(bpm, userWeightKg, userAge, 0.5f);
-
-      Serial.printf("BPM: %d | Interval: %d kcal | Total: %d kcal\n", bpm, intervalKcal, totalKcal);
+  if (now - lastSwitchTime >= 10000) {
+    lastSwitchTime = now;
+    showStats = !showStats;  // Toggle screen state
   }
 
-  delay(10); // Lightweight loop
+  if (showStats) {
+    lcd.display(DisplayState::StatsScreen);  // HR & Calories
+  } else {
+    lcd.display(DisplayState::StepsScreen);  // Steps & Pace
+  }
 
+  Serial.println(calCalc.getTotal());
 
-
-  // //Serial.print("Current X: ");
-  // Serial.print(-3.6);       // lower bound
-  // Serial.print("\t");
-  // Serial.print(3.6);    // upper bound
-  // Serial.print("\t");
-  // //Serial.print(adxl.readX());
-  // Serial.print(adxl.convertADCtoAccel(adxl.readX()));
-  // Serial.print("\t");
-  // //Serial.print(adxl.readY());
-  // Serial.print(adxl.convertADCtoAccel(adxl.readY()));
-  // Serial.print("\t");
-  // //Serial.println(adxl.readZ());
-  // Serial.println(adxl.convertADCtoAccel(adxl.readZ()));
-
-  // delay(50);
-
-  // // if (millis() - last_trigger > 1000) {
-  // //   adxl.triggerSt(!adxl.getStState());
-  // //   last_trigger = millis();
-  // // }
-
+  delay(100);          // Smooth refresh rate
 }

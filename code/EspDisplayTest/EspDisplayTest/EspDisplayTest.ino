@@ -1,6 +1,4 @@
-#include <Adafruit_GFX.h>
 #include <Adafruit_ST7789.h>
-#include <SPI.h>
 #include <math.h> // for sqrt
 
 #include "whiterun_rgb565_fixed.h"

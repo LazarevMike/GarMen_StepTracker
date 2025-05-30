@@ -1,35 +1,57 @@
 #include "CaloriesCalculator.h"
+#include <Arduino.h>
 
-// Internal static variable to store total calories
+// Initialize static member variables
+unsigned long CaloriesCalculator::lastCalcTime = 0;
 int CaloriesCalculator::totalCalories = 0;
 
-// Zillman formula (male version) to estimate kcal burned per minute
-int CaloriesCalculator::calculatePerMinute(int heartRate, float weightKg, int age) {
-    float numerator = -55.0969f + (0.6309f * heartRate) + (0.1988f * weightKg) + (0.2017f * age);
-    float kcal = numerator / 4.184f;
-    return static_cast<int>(kcal); // Rounded down (truncate)
+/*
+ * Calculates estimated kilocalories burned per minute using the heart rate.
+ * The formula is a simplified version of the calorie burn equation based on:
+ *   kcal/min = (-55.0969 + 0.6309 * HR + 0.1988 * weight_kg + 0.2017 * age) / 4.184
+ * The result is converted to a positive value using fabsf() and cast to int.
+ */
+int CaloriesCalculator::calculatePerMinute(const HeartRateMonitor& hrMonitor) {
+    int heartRate = hrMonitor.getLatestBPM();
+    float kcalPerMin = fabsf(
+        (-55.0969f + 0.6309f * heartRate + 0.1988f * userWeightKg + 0.2017f * userAge) / 4.184f
+    );
+    return static_cast<int>(kcalPerMin);
 }
 
-// Multiply per-minute burn by number of minutes
-int CaloriesCalculator::calculateTotal(int heartRate, float weightKg, int age, float minutes) {
-    float kcal = calculatePerMinute(heartRate, weightKg, age) * minutes;
-    return static_cast<int>(kcal); // Truncate to integer
+/*
+ * Calculates total calories burned over the fixed time interval (e.g. 0.5 min).
+ * Multiplies the per-minute rate by the interval duration.
+ */
+int CaloriesCalculator::calculateTotal(const HeartRateMonitor& hrMonitor) {
+    return calculatePerMinute(hrMonitor) * intervalMinutes;
 }
 
-// Update total calories with current interval and return new total
-int CaloriesCalculator::updateTotalCalories(int heartRate, float weightKg, int age, float minutes) {
-    int intervalKcal = calculateTotal(heartRate, weightKg, age, minutes);
-    totalCalories += intervalKcal;
-    return totalCalories;
+/*
+ * Periodically updates the total calories burned.
+ * Only updates if 5 seconds have passed since the last update and the HR monitor is connected.
+ */
+void CaloriesCalculator::update(const HeartRateMonitor& hrMonitor) {
+    unsigned long now = millis();
+
+    // Update every 5 seconds and only when BLE HR device is connected
+    if (now - lastCalcTime >= 5000 && hrMonitor.isConnected()) {
+        lastCalcTime = now;
+        totalCalories += calculateTotal(hrMonitor);
+    }
 }
 
-// Accessor for current total
+/*
+ * Returns the current total calories burned.
+ */
 int CaloriesCalculator::getTotal() {
     return totalCalories;
 }
 
-
-// Reset stored total calories
+/*
+ * Resets the total calories count and restarts the update timer.
+ */
 void CaloriesCalculator::resetTotal() {
     totalCalories = 0;
+    lastCalcTime = millis();
 }
