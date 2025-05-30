@@ -44,6 +44,15 @@ void setup() {
   Serial.begin(115200);
   analogReadResolution(12);  // Full 12-bit resolution
 
+  pinMode(35, OUTPUT);
+  pinMode(36, OUTPUT);
+  pinMode(37, OUTPUT);
+
+  // Turn the LEDs ON
+  digitalWrite(35, HIGH);
+  digitalWrite(36, HIGH);
+  digitalWrite(37, HIGH);
+
   tft.init(240, 280);
   tft.setRotation(3);
   tft.fillScreen(ST77XX_BLACK);

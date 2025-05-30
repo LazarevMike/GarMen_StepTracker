@@ -9,14 +9,15 @@ int counter1 = 0;
 int counter2 = 0;
 int counter3 = 0;
 
+
 void setup() {
-  Serial.begin(115200);
 
 }
 
 void loop() {
   //ui.testLeds();
   ui.testButtons();  
+
 
 
 
