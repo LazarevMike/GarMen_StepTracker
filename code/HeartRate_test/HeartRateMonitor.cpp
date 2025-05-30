@@ -141,7 +141,12 @@ void HeartRateMonitor::update() {
     }
 }
 
-
+// Returns latest HR BPM
 int HeartRateMonitor::getLatestBPM() const {
     return latestBPM;
+}
+
+// Returns connection status for HR monitor
+bool HeartRateMonitor::isConnected() const {
+    return connected;
 }

@@ -22,6 +22,9 @@ public:
     // Get latest HR BPM for calories calulcations
     int getLatestBPM() const;
 
+    // Get status of the Bluetooth connection returns True or False
+    bool isConnected() const;
+
 private:
     // Pointer to the BLE device that advertises the Heart Rate Service
     NimBLEAdvertisedDevice* advDevice;
