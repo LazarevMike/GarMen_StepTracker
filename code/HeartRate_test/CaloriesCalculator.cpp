@@ -32,3 +32,8 @@ void CaloriesCalculator::resetTotal() {
 int CaloriesCalculator::getTotal() {
     return totalCalories;
 }
+
+// Public reset: resets all state variables (here: totalCalories)
+void CaloriesCalculator::reset() {
+    totalCalories = 0;
+}
