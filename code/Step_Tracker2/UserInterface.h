@@ -14,9 +14,9 @@
     Blue LED: 35
     Orange LED: 36
     Green LED: 37
-    Reset button: 21
-    Start/Pause button: 26
-    Calibration button: 33
+    Reset button: 21 (left button)
+    Start/Pause button: 26 (middle button)
+    Calibration button: 33 (right button)
 */
 
 class UserInterface {

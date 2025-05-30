@@ -28,7 +28,7 @@ void loop() {
         float intervalKcal = CaloriesCalculator::calculateTotal(bpm, userWeightKg, userAge, 0.5f);
         float totalKcal = CaloriesCalculator::updateTotalCalories(bpm, userWeightKg, userAge, 0.5f);
 
-        Serial.printf("BPM: %d | Interval: %.2f kcal | Total: %.2f kcal\n", bpm, intervalKcal, totalKcal);
+        Serial.printf("BPM: %d | Interval: %d kcal | Total: %d kcal\n", bpm, intervalKcal, totalKcal);
     }
 
     delay(10); // Lightweight loop
