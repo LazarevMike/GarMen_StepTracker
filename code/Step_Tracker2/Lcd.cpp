@@ -1,32 +1,34 @@
 #include "Lcd.h"
 #include "Arduino.h"
-#include "StepCounter.h"  // For accessing step, pace, and SPM data
 
-#include <Adafruit_GFX.h>
-#include <Adafruit_ST7789.h>
-#include <SPI.h>
-#include <math.h> // For sqrt calculations (if needed in future)
-
+#include <math.h>  // For future vector calculations, e.g., battery or pace indicators
 #include "media/whiterun_rgb565_fixed.h"
 #include "media/idle_white_on_black_80x88.h"
 #include "media/flame_icon.h"
 
-// Global TFT screen instance
-TFT_eSPI tft = TFT_eSPI(); // Change if using a different screen library
+// Global TFT display instance
+TFT_eSPI tft = TFT_eSPI();
 
 /*
-   Constructor initializes internal UI state and all sensor display values to zero.
+   Constructor: Initializes internal state for the display,
+   stores references to external modules for sensor data access,
+   and sets initial values for all UI elements.
 */
-Lcd::Lcd()
+Lcd::Lcd(StepCounter& stepCounter, HeartRateMonitor& hrMonitor, CaloriesCalculator& calCalc)
     : currentState(DisplayState::StepsScreen),
       stepCount(0),
       stepsPerMinute(0),
       bpm(0),
       calories(0),
-      statusBLE(false) {}
+      statusBLE(false),
+      pace(Pace::IDLE),
+      stepCounter(stepCounter),
+      hrMonitor(hrMonitor),
+      calCalc(calCalc) {}
 
 /*
-   Initializes the screen. Sets rotation, clears the display, and configures default text colors.
+   Initializes the TFT display, sets rotation,
+   background color, and default text formatting.
 */
 void Lcd::begin() {
     tft.init();
@@ -36,42 +38,43 @@ void Lcd::begin() {
 }
 
 /*
-   Fetches the current step data from StepCounter.
-   Updates internal step count, steps per minute, and detected pace.
+   Pulls step-related data from StepCounter and updates internal variables.
+   This includes total step count, step rate (SPM), and current pace.
 */
 void Lcd::setStepData() {
-    stepCount = StepCounter::getStepCount();
-    stepsPerMinute = StepCounter::getStepsPerMinute();
-    pace = StepCounter::getPace();
+    stepCount = stepCounter.getStepCount();
+    stepsPerMinute = stepCounter.getStepsPerMinute();
+    pace = stepCounter.getPace();
 }
 
 /*
-   Retrieves the current heart rate value from the HeartRateMonitor.
+   Updates the latest heart rate (BPM) value from HeartRateMonitor.
 */
 void Lcd::setHeartRate() {
-    bpm = HeartRateMonitor::getLatestBPM();
+    bpm = hrMonitor.getLatestBPM();
 }
 
 /*
-   Retrieves the total calories burned from CaloriesCalculator.
+   Fetches the total calories burned so far from CaloriesCalculator.
 */
 void Lcd::setCalories() {
-    calories = CaloriesCalculator::getTotal();
+    calories = calCalc.getTotal();
 }
 
 /*
-   Updates BLE connection status by querying HeartRateMonitor.
+   Updates the status of the BLE connection from HeartRateMonitor.
+   Used for showing BLE indicator in the UI.
 */
 void Lcd::bluetoothStatus() {
-    statusBLE = HeartRateMonitor::isConnected();
+    statusBLE = hrMonitor.isConnected();
 }
 
 /*
-   Main function to switch between display modes (step screen or stats screen).
-   Avoids unnecessary redraws if the same screen is already active.
+   Changes the screen to display either step tracking info or health stats.
+   Prevents redundant redraws if the state hasn't changed.
 */
 void Lcd::display(DisplayState newState) {
-    if (newState == currentState) return; // Prevent redundant redraws
+    if (newState == currentState) return;
 
     currentState = newState;
 
@@ -86,8 +89,10 @@ void Lcd::display(DisplayState newState) {
 }
 
 /*
-   Renders the step tracking screen:
-   Displays total steps, goal progress, and steps per minute.
+   Renders the step tracking interface:
+   - Shows total steps taken
+   - Step goal progress (/10000)
+   - Step rate (steps per minute)
 */
 void Lcd::showStepsScreen() {
     tft.fillScreen(TFT_BLACK);
@@ -98,22 +103,20 @@ void Lcd::showStepsScreen() {
 
     tft.setTextSize(4);
     tft.setCursor(10, 40);
-    tft.printf("%05d", stepCount);  // Leading zeros, 5 digits
+    tft.printf("%05d", stepCount);  // Display with leading zeros (up to 5 digits)
 
     tft.setTextSize(2);
     tft.setCursor(10, 100);
-    tft.print("/10000");
+    tft.print("/10000");  // Fixed goal display
 
     tft.setCursor(10, 130);
-    tft.printf("Steps/min: %.1f", stepsPerMinute);
-
-    // Optional: Add pace icon, BLE icon, etc.
+    tft.printf("Steps/min: %.1f", stepsPerMinute);  // SPM with 1 decimal
 }
-
 
 /*
    Renders the stats screen:
-   Shows heart rate and calories burned so far.
+   - Displays heart rate in BPM
+   - Displays calories burned
 */
 void Lcd::showStatsScreen() {
     tft.fillScreen(TFT_BLACK);
@@ -132,33 +135,32 @@ void Lcd::showStatsScreen() {
     tft.setTextSize(3);
     tft.setCursor(10, 110);
     tft.printf("%d kcal", calories);
-
-    // Optional: Add fire icon for intensity or achievements
 }
 
-
+/*
+   Draws shared UI elements that remain consistent across all screens:
+   - Logo on the left
+   - Bluetooth status indicator
+   - Battery status (hardcoded for now)
+   - Timer showing system uptime in MM:SS
+*/
 void Lcd::drawCommonUI() {
-    // Top bar background
-    tft.fillRect(0, 0, 240, 20, TFT_DARKGREY);
+    tft.fillRect(0, 0, 240, 20, TFT_DARKGREY);  // Top bar background
 
-    // Logo
+    // Logo area
     tft.setCursor(5, 2);
     tft.setTextColor(TFT_WHITE, TFT_DARKGREY);
     tft.print("LOGO");
 
-    // Bluetooth status
+    // Bluetooth connection status
     tft.setCursor(80, 2);
-    if (statusBLE) {
-        tft.print("BLE: OK");
-    } else {
-        tft.print("BLE: --");
-    }
+    tft.print(statusBLE ? "BLE: OK" : "BLE: --");
 
-    // Battery level (placeholder)
+    // Static battery level (replace with actual sensor later)
     tft.setCursor(160, 2);
     tft.print("BAT: 95%");
 
-    // Timer (e.g., uptime or session duration)
+    // Elapsed time since power-on (uptime)
     tft.setCursor(200, 2);
     unsigned long seconds = millis() / 1000;
     tft.printf("%02lu:%02lu", seconds / 60, seconds % 60);

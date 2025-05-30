@@ -23,7 +23,6 @@ int CaloriesCalculator::updateTotalCalories(int heartRate, float weightKg, int a
     return totalCalories;
 }
 
-
 // Accessor for current total
 int CaloriesCalculator::getTotal() {
     return totalCalories;

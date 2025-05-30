@@ -18,9 +18,6 @@ public:
     // Returns current total
     static int getTotal();
 
-    // Resets all internal state (e.g., total calories) to 0
-    static void reset();
-
 private:
     static int totalCalories;  // Accumulates over time as integer kcal
 };
