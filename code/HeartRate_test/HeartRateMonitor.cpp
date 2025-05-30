@@ -140,3 +140,8 @@ void HeartRateMonitor::update() {
         Serial.printf("Heart Rate (BPM): %d\n", bpmToPrint);
     }
 }
+
+
+int HeartRateMonitor::getLatestBPM() const {
+    return latestBPM;
+}

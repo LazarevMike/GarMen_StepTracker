@@ -19,6 +19,9 @@ public:
     // Main update loop, to be called from Arduino's loop()
     void update();
 
+    // Get latest HR BPM for calories calulcations
+    int getLatestBPM() const;
+
 private:
     // Pointer to the BLE device that advertises the Heart Rate Service
     NimBLEAdvertisedDevice* advDevice;
