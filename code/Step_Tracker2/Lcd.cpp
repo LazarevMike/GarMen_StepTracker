@@ -176,7 +176,7 @@ void Lcd::batteryLevel() {
 }
 
 
-void showCalibrationScreen() {
+void Lcd::showCalibrationScreen() {
     drawCommonUI();
 
 
@@ -188,15 +188,16 @@ void showCalibrationScreen() {
 
     tft.setTextSize(3);
     tft.setCursor(20, 80);
-    tft.printf("Calibrating axis: %s", axis);
+    tft.printf("Calib axis:%s", axis);
 
     tft.setTextSize(2);
-    tft.setCursor(20, 110);
-    tft.printf("X: %.2f", xAxisValue);
+    tft.setCursor(20, 140);
+    tft.printf("X:%.2f", xAxisValue);
 
-    tft.setCursor(100, 110);
-    tft.printf("Y: %.2f", yAxisValue);
+    tft.setCursor(100, 170);
+    tft.printf("Y:%.2f", yAxisValue);
 
-    tft.setCursor(180, 110);
-    tft.printf("Z: %.2f", zAxisValue);
+    tft.setCursor(180, 140);
+    tft.printf("Z:%.2f", zAxisValue);
+
 }
