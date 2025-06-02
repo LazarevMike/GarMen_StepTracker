@@ -11,19 +11,28 @@ int CaloriesCalculator::totalCalories = 0;
    - Step count and pace as fallback when HR monitor is disconnected
 */
 int CaloriesCalculator::caloriesFromSteps(const StepCounter& stepCounter) {
-    // Rough estimate based on METs and steps
+// Get steps per minute (SPM) and pace
     int spm = stepCounter.getStepsPerMinute();
-    float met = 1.5f;  // Default light activity
+    float kcalPerStep = 0.03f;  // Default for IDLE or low activity
 
+    // Adjust kcal burned per step based on pace
     switch (stepCounter.getPace()) {
-        case WALK: met = 3.5f; break;
-        case RUN:  met = 7.0f; break;
-        default:   met = 1.5f; break;
+        case WALK:
+            kcalPerStep = 0.04f;  // avg kcal/step walking
+            break;
+        case RUN:
+            kcalPerStep = 0.06f;  // avg kcal/step running
+            break;
+        default:
+            kcalPerStep = 0.03f;  // idle or unknown
+            break;
     }
 
-    // Formula: kcal/min = MET * weight_kg * 3.5 / 200
-    float kcalPerMin = met * userWeightKg * 3.5f / 200.0f;
-    return static_cast<int>(kcalPerMin * intervalMinutes);
+    // Estimate number of steps taken during the interval
+    float stepsInInterval = spm * intervalMinutes;
+
+    // Calculate and return calories burned
+    return static_cast<int>(stepsInInterval * kcalPerStep);
 }
 
 
@@ -56,7 +65,7 @@ int CaloriesCalculator::calculateTotal(const HeartRateMonitor& hrMonitor) {
 void CaloriesCalculator::update(const HeartRateMonitor& hrMonitor, const StepCounter& stepCounter) {
     unsigned long now = millis();
 
-    if (now - lastCalcTime >= 5000) {
+    if (now - lastCalcTime >= 1000) {
         lastCalcTime = now;
 
         if (hrMonitor.isConnected()) {
