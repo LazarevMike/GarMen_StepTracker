@@ -35,6 +35,17 @@ void UserInterface::displayInfo(DisplayState state) {
   LCD_.display(state);
 }
 
+void UserInterface::reset() {
+  updateStepData(0, 0, Pace::IDLE);
+  updateHeartRate(0);
+  updateCalories(0);
+  updateBluetoothStatus(0);
+  updateTime(0);
+  // triggerBlue(0);
+  // triggerGreen(0);
+  // triggerOrange(0);
+}
+
 void UserInterface::updateStepData(int newSteps, int newspm, Pace newPace) {
   LCD_.setStepData(newSteps, newspm, newPace);
 }
@@ -53,6 +64,14 @@ void UserInterface::updateBluetoothStatus(bool newStatusBLE) {
 
 void UserInterface::updateBatteryLevel(int newBatteryPercentage) {
   LCD_.setBatteryLevel(newBatteryPercentage);
+}
+
+void UserInterface::updateTime(unsigned long time) {
+  LCD_.setTime(time);
+}
+
+void UserInterface::updateAxisAccels(int axis_id, float X_reading, float Y_reading, float Z_reading) {
+  LCD_.setAxisAccels(axis_id, X_reading, Y_reading, Z_reading);
 }
 
 void UserInterface::testLeds() {

@@ -8,7 +8,10 @@ StepCounter::StepCounter()
       lastStepTime(0),
       lastResetTime(0),
       stepTimestampIndex(0),
-      currentPace(IDLE)
+      currentPace(IDLE),
+      X_offset(0),
+      Y_offset(0),
+      Z_offset(0)
 {
     memset(stepTimestamps, 0, sizeof(stepTimestamps));
 }
@@ -48,11 +51,27 @@ void StepCounter::update() {
     }
 }
 
+void StepCounter::adjustX() {
+    X_offset = 1.0 - getX();
+}
+
+void StepCounter::adjustY() {
+    Y_offset = 1.0 - getY();
+}
+
+void StepCounter::adjustZ() {
+    Z_offset = - 1.0 - getZ();
+}
+
 /*
    Calculates the magnitude of the 3D acceleration vector.
 */
 float StepCounter::calculateMagnitude(float x, float y, float z) {
     return sqrt(x * x + y * y + z * z);
+}
+
+float StepCounter::getMagnitude() {
+    return calculateMagnitude(getX(), getY(), getZ());
 }
 
 /*
@@ -121,6 +140,17 @@ Pace StepCounter::getPace() const {
     return currentPace;
 }
 
+float StepCounter::getX() {
+    return adxl.readAccelX() + X_offset;
+}
+    
+float StepCounter::getY() {
+    return adxl.readAccelY() + Y_offset;
+}
+
+float StepCounter::getZ() {
+    return adxl.readAccelZ() + Z_offset;
+}
 /*
    Resets step counter, pace, and all internal state for fresh measurement.
 */

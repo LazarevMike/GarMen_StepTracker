@@ -21,7 +21,7 @@ StepTracker steptracker;
 //UserInterface ui;
 
 void setup() {
-  // Serial.begin(115200);
+  Serial.begin(115200);
   //hrMonitor.begin();
   //lcd.begin();  // Initialize display
   // stepcounter.begin();
@@ -32,8 +32,9 @@ void setup() {
 
 void loop() {
   steptracker.run();
+  Serial.println(steptracker.getMagnitude());
   //ui.displaySteps();
-  delay(20);
+  //delay(20);
 
 
   //stepcounter.update();

@@ -37,6 +37,8 @@ class UserInterface {
 
     void displayCalib();
 
+    void reset();
+
     void displayInfo(DisplayState state);
 
     // Gathers and updates current step data from StepCounter
@@ -53,6 +55,12 @@ class UserInterface {
 
     //Update battery level
     void updateBatteryLevel(int newBatteryPercentage);
+
+    //Update time of workout
+    void updateTime(unsigned long time);
+
+    //Update axises readings for calibration
+    void updateAxisAccels(int axis_id, float X_reading, float Y_reading, float Z_reading);
 
     /*
     Method to test functionality of all the leds in the UI. 

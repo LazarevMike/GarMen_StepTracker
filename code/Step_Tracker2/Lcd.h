@@ -49,6 +49,11 @@ public:
     //Update battery level
     void setBatteryLevel(int newBatteryPercentage);
 
+    // Update time of workout
+    void setTime(unsigned long time);
+
+    void setAxisAccels(int axis_id, float X_reading, float Y_reading, float Z_reading);
+
 private:
     static constexpr uint8_t REFRESH_HZ = 50;  // Refresh rate in Hz
     unsigned long lastRefreshTime = 0;
@@ -86,6 +91,13 @@ private:
     bool statusBLE;              // BLE connection status
     Pace pace;                   // Current user pace (IDLE, WALK, RUN)
     int batteryPercentage = 45;       // Current battery percentage (0 - 100)%
+    unsigned long seconds;
+
+    int selected_axis;
+    float X_axis;
+    float Y_axis;
+    float Z_axis;
+    const char* axisLabels[3] = { "X", "Y", "-Z" };
 
 
     // For timing display switching and animations

@@ -26,11 +26,31 @@ public:
 
   void run();
 
+  void calibrate();
+
+  float getMagnitude();
+
 private:
   StepCounter stepcounter;
   UserInterface ui;
   HeartRateMonitor heartmonitor;
   DisplayState displaystate;
+  Pace pace_;
+  bool isPaused;
+  bool isCalibrating;
+
+  // Timer controls
+  unsigned long elapsedTime;
+  unsigned long startTimeStamp;
+  unsigned long pauseTimeStamp;
+  unsigned long pausedTime;
+
+  unsigned long lastCalibPress;
+
+  int selected_axis;
+
+
+  void setLeds(Pace pace);
   
 };
 

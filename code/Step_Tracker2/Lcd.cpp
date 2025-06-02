@@ -59,6 +59,17 @@ void Lcd::setBatteryLevel(int newBatteryPercentage) {
     batteryPercentage = newBatteryPercentage;
 }
 
+void Lcd::setTime(unsigned long time) {
+    seconds = time;
+}   
+
+void Lcd::setAxisAccels(int axis_id, float X_reading, float Y_reading, float Z_reading) {
+    selected_axis = axis_id;
+    X_axis = X_reading;
+    Y_axis = Y_reading;
+    Z_axis = Z_reading;
+}
+
 // Change screen based on state (steps/stats)
 void Lcd::display(DisplayState newState) {
 
@@ -77,7 +88,6 @@ void Lcd::display(DisplayState newState) {
 
     switch (currentState) {
         case DisplayState::Steps:
-        
             showStepsScreen();
             break;
         case DisplayState::Stats:
@@ -139,7 +149,6 @@ void Lcd::drawCommonUI() {
     // Runtime timer
     canvas.setTextSize(2);
     canvas.setCursor(10, 20);
-    unsigned long seconds = millis() / 1000;
     canvas.printf("%02lu:%02lu", seconds / 60, seconds % 60);
 }
 
@@ -211,23 +220,17 @@ void Lcd::batteryLevel() {
 void Lcd::showCalibrationScreen() {
     drawCommonUI();
 
-    // should recieve this data type
-    const char* axis = "-X";
-    float xAxisValue = -0.14;
-    float yAxisValue = -0.84;
-    float zAxisValue = -3.58;
-
     canvas.setTextSize(3);
     canvas.setCursor(20, 80);
-    canvas.printf("Calib axis:%s", axis);
+    canvas.printf("Calib axis:%s", axisLabels[selected_axis]);
 
     canvas.setTextSize(2);
     canvas.setCursor(20, 140);
-    canvas.printf("X:%.2f", xAxisValue);
+    canvas.printf("X:%.2f", X_axis);
 
     canvas.setCursor(100, 170);
-    canvas.printf("Y:%.2f", yAxisValue);
+    canvas.printf("Y:%.2f", Y_axis);
 
     canvas.setCursor(180, 140);
-    canvas.printf("Z:%.2f", zAxisValue);
+    canvas.printf("Z:%.2f", Z_axis);
 }
