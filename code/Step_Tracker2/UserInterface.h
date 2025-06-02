@@ -28,6 +28,21 @@ class UserInterface {
     */
     UserInterface();
 
+    // Gathers and updates current step data from StepCounter
+    void updateStepData(int newSteps, int newspm, Pace newPace);
+
+    // Retrieves the latest BPM from HeartRateMonitor
+    void updateHeartRate(int newBPM);
+
+    // Retrieves total burned calories from CaloriesCalculator
+    void updateCalories(int newCalories);
+
+    // Updates the BLE connection status
+    void updateBluetoothStatus(bool newStatusBLE);
+
+    //Update battery level
+    void updateBatteryLevel(int newBatteryPercentage);
+
     /*
     Method to test functionality of all the leds in the UI. 
     Blinks all the leds 5 times in a sequence  using delay (not asynchronous function)

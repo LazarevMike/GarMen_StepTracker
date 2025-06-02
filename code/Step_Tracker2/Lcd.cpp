@@ -48,7 +48,7 @@ void Lcd::setCalories(int newCalories) {
 }
 
 // Update BLE connection status
-void Lcd::bluetoothStatus(bool newStatusBLE) {
+void Lcd::setBluetoothStatus(bool newStatusBLE) {
     statusBLE = newStatusBLE;
 }
 
@@ -176,7 +176,7 @@ void Lcd::batteryLevel() {
 }
 
 
-void showCalibrationScreen() {
+void Lcd::showCalibrationScreen() {
     drawCommonUI();
 
 
