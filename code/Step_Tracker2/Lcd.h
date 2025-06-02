@@ -56,6 +56,7 @@ public:
     void setBatteryLevel(int newBatteryPercentage);
 
 private:
+    GFXcanvas16 canvas;
     // Draws top UI bar: app name, BLE status, battery, time
     void drawCommonUI();
 

@@ -33,7 +33,7 @@ void setup() {
 void loop() {
   steptracker.run();
   //ui.displaySteps();
-  delay(2000);
+  delay(20);
 
 
   //stepcounter.update();

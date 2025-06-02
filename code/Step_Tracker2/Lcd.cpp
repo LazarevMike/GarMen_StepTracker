@@ -10,7 +10,9 @@ Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST);
 
 // Constructor to link external data sources (step counter, HR monitor, calorie tracker)
 Lcd::Lcd()
-    : currentState(DisplayState::StepsScreen),
+    :
+      canvas(280, 240), 
+      currentState(DisplayState::StepsScreen),
       stepCount(0),
       stepsPerMinute(0),
       bpm(0),
@@ -26,8 +28,8 @@ void Lcd::begin() {
     tft.init(240, 280);         // Set screen dimensions
     tft.setRotation(3);         // Landscape orientation
     tft.fillScreen(ST77XX_BLACK);
-    tft.setTextColor(ST77XX_WHITE);
-    tft.setTextWrap(false);
+    canvas.setTextColor(ST77XX_WHITE);
+    canvas.setTextWrap(false);
 }
 
 // Update step-related data from StepCounter
@@ -59,11 +61,13 @@ void Lcd::setBatteryLevel(int newBatteryPercentage) {
 
 // Change screen based on state (steps/stats)
 void Lcd::display(DisplayState newState) {
-
     currentState = newState;
 
-    switch (newState) {
+    canvas.fillScreen(ST77XX_BLACK);  // full redraw
+    
+    switch (currentState) {
         case DisplayState::StepsScreen:
+        
             showStepsScreen();
             break;
         case DisplayState::StatsScreen:
@@ -73,71 +77,69 @@ void Lcd::display(DisplayState newState) {
             showCalibrationScreen();
             break;
     }
+
+    tft.drawRGBBitmap(0, 0, canvas.getBuffer(), 280, 240);
 }
 
 // Draw step tracking screen with SPM, step count, and icon
 void Lcd::showStepsScreen() {
-    tft.fillScreen(ST77XX_BLACK);
     drawCommonUI();          // Optional top bar with time/BLE
 
     updateStateImage();      // Animate walk/idle icon
 
-    tft.setTextSize(4);
-    tft.setCursor(80, 130);
-    tft.printf("%05d", stepCount);
+    canvas.setTextSize(4);
+    canvas.setCursor(80, 130);
+    canvas.printf("%05d", stepCount);
 
-    tft.setTextSize(2.5);
-    tft.setCursor(100, 170);
-    tft.print("/10000");
+    canvas.setTextSize(2.5);
+    canvas.setCursor(100, 170);
+    canvas.print("/10000");
 
-    tft.setTextSize(2);
-    tft.setCursor(85, 200);
-    tft.printf("SPM %.1f", stepsPerMinute);
-
-    tft.drawRGBBitmap(170, 197, flame_small_img, 19, 19);  // Flame icon next to SPM
+    canvas.setTextSize(2);
+    canvas.setCursor(85, 200);
+    canvas.printf("SPM %.1f", stepsPerMinute);
 }
 
 // Draw stats screen with heart rate and calories
 void Lcd::showStatsScreen() {
-    tft.fillScreen(ST77XX_BLACK);
     drawCommonUI();          // Optional top bar with time/BLE
 
-    tft.drawRGBBitmap(25, 82, heart_img, 49, 49);
-    tft.setTextSize(5);
-    tft.setCursor(80, 90);
-    tft.printf("HR:%d", bpm);
+    canvas.drawRGBBitmap(25, 82, heart_img, 49, 49);
+    canvas.setTextSize(5);
+    canvas.setCursor(80, 90);
+    canvas.printf("HR:%d", bpm);
 
-    tft.drawRGBBitmap(25, 142, flame_big_img, 30, 36);
-    tft.setTextSize(4);
-    tft.setCursor(70, 150);
-    tft.printf("kCal:%d", calories);
+    canvas.drawRGBBitmap(25, 142, flame_big_img, 30, 36);
+    canvas.setTextSize(4);
+    canvas.setCursor(70, 150);
+    canvas.printf("kCal:%d", calories);
 }
 
 // Draw top bar with app name, BLE status, battery, and runtime clock
 void Lcd::drawCommonUI() {
 
-    tft.setTextSize(2);
-    tft.setCursor(105, 20);
-    tft.print("GarMen");  // App title
+    canvas.setTextSize(2);
+    canvas.setCursor(105, 20);
+    canvas.print("GarMen");  // App title
 
     bluetoothStateImage();  // Draw BLE icon
 
-    tft.drawRGBBitmap(220, 10, battery_img, 52, 52);
+    canvas.drawRGBBitmap(220, 10, battery_img, 52, 52);
     batteryLevel();  // Draw battery fill bars
 
     // Runtime timer
-    tft.setTextSize(2);
-    tft.setCursor(10, 20);
+    canvas.setTextSize(2);
+    canvas.setCursor(10, 20);
     unsigned long seconds = millis() / 1000;
-    tft.printf("%02lu:%02lu", seconds / 60, seconds % 60);
+    canvas.printf("%02lu:%02lu", seconds / 60, seconds % 60);
 }
 
 // Draw BLE connection icon depending on connection state
 void Lcd::bluetoothStateImage() {
     if (statusBLE == true) {
-        tft.drawRGBBitmap(15, 200, bluetooth_img, 32, 32);
+        canvas.drawRGBBitmap(15, 200, bluetooth_img, 32, 32);
     } else {
-        tft.drawRGBBitmap(15, 200, noBluetooth_img, 32, 32);
+        canvas.drawRGBBitmap(15, 200, noBluetooth_img, 32, 32);
     }
 }
 
@@ -145,7 +147,6 @@ void Lcd::bluetoothStateImage() {
 void Lcd::updateStateImage() {
     int xImg = (280 - 80) / 2;
     int yImg = 40;
-    tft.fillRect(xImg, yImg, 80, 90, ST77XX_BLACK);  // Clear previous image
 
     const uint16_t* img = nullptr;
     int h = 0;
@@ -173,7 +174,7 @@ void Lcd::updateStateImage() {
     }
     
     // Display state image
-    tft.drawRGBBitmap(xImg, yImg, img, 80, h);
+    canvas.drawRGBBitmap(xImg, yImg, img, 80, h);
 }
 
 // Simulates battery indicator with 3 blocks
@@ -181,25 +182,24 @@ void Lcd::batteryLevel() {
 
     if (batteryPercentage < 33) {
         // Low: only 1 bar
-        tft.fillRect(223, 26, 12, 20, ST77XX_WHITE);
-        tft.fillRect(237, 26, 12, 20, ST77XX_BLACK);
-        tft.fillRect(251, 26, 12, 20, ST77XX_BLACK);
+        canvas.fillRect(223, 26, 12, 20, ST77XX_WHITE);
+        canvas.fillRect(237, 26, 12, 20, ST77XX_BLACK);
+        canvas.fillRect(251, 26, 12, 20, ST77XX_BLACK);
     } else if (batteryPercentage >= 33 && batteryPercentage < 66) {
         // Medium: 2 bars
-        tft.fillRect(223, 26, 12, 20, ST77XX_WHITE);
-        tft.fillRect(237, 26, 12, 20, ST77XX_WHITE);
-        tft.fillRect(251, 26, 12, 20, ST77XX_BLACK);
+        canvas.fillRect(223, 26, 12, 20, ST77XX_WHITE);
+        canvas.fillRect(237, 26, 12, 20, ST77XX_WHITE);
+        canvas.fillRect(251, 26, 12, 20, ST77XX_BLACK);
     } else if (batteryPercentage >= 66 && batteryPercentage <= 100) {
         // Full: all 3 bars
-        tft.fillRect(223, 26, 12, 20, ST77XX_WHITE);
-        tft.fillRect(237, 26, 12, 20, ST77XX_WHITE);
-        tft.fillRect(251, 26, 12, 20, ST77XX_WHITE);
+        canvas.fillRect(223, 26, 12, 20, ST77XX_WHITE);
+        canvas.fillRect(237, 26, 12, 20, ST77XX_WHITE);
+        canvas.fillRect(251, 26, 12, 20, ST77XX_WHITE);
     }
 }
 
 // Draw calibration screen with axis values axis calibrating
 void Lcd::showCalibrationScreen() {
-    tft.fillScreen(ST77XX_BLACK);
     drawCommonUI();
 
     // should recieve this data type
@@ -208,17 +208,17 @@ void Lcd::showCalibrationScreen() {
     float yAxisValue = -0.84;
     float zAxisValue = -3.58;
 
-    tft.setTextSize(3);
-    tft.setCursor(20, 80);
-    tft.printf("Calib axis:%s", axis);
+    canvas.setTextSize(3);
+    canvas.setCursor(20, 80);
+    canvas.printf("Calib axis:%s", axis);
 
-    tft.setTextSize(2);
-    tft.setCursor(20, 140);
-    tft.printf("X:%.2f", xAxisValue);
+    canvas.setTextSize(2);
+    canvas.setCursor(20, 140);
+    canvas.printf("X:%.2f", xAxisValue);
 
-    tft.setCursor(100, 170);
-    tft.printf("Y:%.2f", yAxisValue);
+    canvas.setCursor(100, 170);
+    canvas.printf("Y:%.2f", yAxisValue);
 
-    tft.setCursor(180, 140);
-    tft.printf("Z:%.2f", zAxisValue);
+    canvas.setCursor(180, 140);
+    canvas.printf("Z:%.2f", zAxisValue);
 }
