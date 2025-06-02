@@ -79,7 +79,7 @@ void Lcd::display(DisplayState newState) {
 
     switch (newState) {
         case DisplayState::StepsScreen:
-            showStepsScreen();
+            showCalibrationScreen();
             break;
         case DisplayState::StatsScreen:
             showStatsScreen();
@@ -194,4 +194,30 @@ void Lcd::batteryLevel() {
         tft.fillRect(237, 26, 12, 20, ST77XX_WHITE);
         tft.fillRect(251, 26, 12, 20, ST77XX_WHITE);
     }
+}
+
+
+void showCalibrationScreen() {
+    drawCommonUI();
+
+
+    // should recieve this data type
+    const char* axis = "-X";
+    float xAxisValue = -0.14;
+    float yAxisValue = -0.84;
+    float zAxisValue = -3.58;
+
+    tft.setTextSize(3);
+    tft.setCursor(20, 80);
+    tft.printf("Calibrating axis: %s", axis);
+
+    tft.setTextSize(2);
+    tft.setCursor(20, 110);
+    tft.printf("X: %.2f", xAxisValue);
+
+    tft.setCursor(100, 110);
+    tft.printf("Y: %.2f", yAxisValue);
+
+    tft.setCursor(180, 110);
+    tft.printf("Z: %.2f", zAxisValue);
 }

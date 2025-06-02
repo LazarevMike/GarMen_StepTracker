@@ -2,7 +2,7 @@
 #define STEPCOUNTER_H
 
 #include <Arduino.h>
-#include <ADXL335.h>
+// #include <ADXL335.h>
 
 /*
    Enum to classify pace based on step frequency.
