@@ -56,8 +56,7 @@ public:
     void setBatteryLevel(int newBatteryPercentage);
 
 private:
-
-    static constexpr uint8_t REFRESH_HZ = 20;  // Refresh rate in Hz
+    static constexpr uint8_t REFRESH_HZ = 50;  // Refresh rate in Hz
     unsigned long lastRefreshTime = 0;
 
     GFXcanvas16 canvas;

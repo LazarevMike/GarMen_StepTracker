@@ -97,7 +97,7 @@ int StepCounter::getStepCount() const {
    Returns the number of steps taken in the last 60 seconds.
    Used to estimate steps per minute (SPM).
 */
-int StepCounter::getStepsPerMinute() {
+int StepCounter::getStepsPerMinute() const {
     unsigned long now = millis();
     int validSteps = 0;
 

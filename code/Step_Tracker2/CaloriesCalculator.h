@@ -1,12 +1,14 @@
 #ifndef CALORIESCALCULATOR_H
 #define CALORIESCALCULATOR_H
 
+#include <Arduino.h>
 #include "HeartRateMonitor.h"  // Needed for passing reference
+#include "StepCounter.h"
 
 class CaloriesCalculator {
 public:
     // Adds interval kcal to running total and returns new total
-    static void update(const HeartRateMonitor& hrMonitor);
+    static void update(const HeartRateMonitor& hrMonitor, const StepCounter& stepCounte);
 
     // Resets total calories to 0
     static void resetTotal();
@@ -20,6 +22,8 @@ private:
 
     // Returns kcal burned for fixed interval
     static int calculateTotal(const HeartRateMonitor& hrMonitor);
+
+    static int caloriesFromSteps(const StepCounter& stepCounter);
 
     static constexpr float userWeightKg = 90.0f;
     static constexpr int userAge = 22;

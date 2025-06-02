@@ -187,7 +187,7 @@ void Lcd::updateStateImage() {
 
 // Simulates battery indicator with 3 blocks
 void Lcd::batteryLevel() {
-
+    batteryPercentage = 100;
     if (batteryPercentage < 33) {
         // Low: only 1 bar
         canvas.fillRect(223, 26, 12, 20, ST77XX_WHITE);
