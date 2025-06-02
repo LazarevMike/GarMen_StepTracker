@@ -67,6 +67,9 @@ private:
     // Renders the heart rate and calorie stats screen
     void showStatsScreen();
 
+    // Renders the calibration screen to start calibration
+    void showCalibrationScreen();
+
     // Displays correct Bluetooth icon (connected or not)
     void bluetoothStateImage();
 
