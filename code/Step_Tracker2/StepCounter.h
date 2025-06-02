@@ -2,6 +2,7 @@
 #define STEPCOUNTER_H
 
 #include <Arduino.h>
+#include <ADXL335.h>
 
 /*
    Enum to classify pace based on step frequency.
@@ -26,7 +27,7 @@ public:
     void begin();
 
     // Main update function, should be called at a consistent rate (e.g. 50–100 Hz)
-    void update(float accelX, float accelY, float accelZ);
+    void update();
 
     // Returns total step count since last reset
     int getStepCount() const;
@@ -45,6 +46,12 @@ private:
     int stepCount;
     unsigned long lastStepTime;
     unsigned long lastResetTime;
+    const unsigned long MIN_STEP_INTERVAL = 250;
+
+    float thresholdHigh = 1.2f; // Step detected when passing above this
+    float thresholdLow = 0.8f;  // Confirmed step when dropping below this
+
+    ADXL335 adxl;
 
     // Rolling buffer to store timestamps of recent steps (for SPM calc)
     int stepTimestamps[20];
