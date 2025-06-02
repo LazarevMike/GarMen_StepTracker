@@ -13,6 +13,23 @@ UserInterface::UserInterface() :
   
 }
 
+void UserInterface::begin() {
+  lcd.begin();
+}
+
+void UserInterface::displaySteps() {
+  lcd.display(DisplayState::StepsScreen);
+}
+
+void UserInterface::displayStats() {
+  lcd.display(DisplayState::StatsScreen);
+
+}
+
+void UserInterface::displayCalib() {
+
+}
+
 void UserInterface::updateStepData(int newSteps, int newspm, Pace newPace) {
   lcd.setStepData(newSteps, newspm, newPace);
 }

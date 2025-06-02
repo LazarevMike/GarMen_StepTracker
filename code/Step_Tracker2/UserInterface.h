@@ -28,6 +28,14 @@ class UserInterface {
     */
     UserInterface();
 
+    void begin();
+
+    void displaySteps();
+
+    void displayStats();
+
+    void displayCalib();
+
     // Gathers and updates current step data from StepCounter
     void updateStepData(int newSteps, int newspm, Pace newPace);
 

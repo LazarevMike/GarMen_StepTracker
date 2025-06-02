@@ -23,10 +23,13 @@ public:
 
   void resume();
 
+  void run();
+
 private:
   StepCounter stepcounter;
   UserInterface ui;
-
+  CaloriesCalculator calcalc;
+  HeartRateMonitor heartmonitor;
 
 };
 
