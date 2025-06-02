@@ -39,7 +39,6 @@ public:
     // Switches to a new display state (StepsScreen or StatsScreen)
     void display(DisplayState newState);
 
-private:
     // Gathers and updates current step data from StepCounter
     void setStepData(int newSteps, int newspm, Pace newPace);
 
@@ -50,11 +49,12 @@ private:
     void setCalories(int newCalories);
 
     // Updates the BLE connection status
-    void bluetoothStatus(bool newStatusBLE);
+    void setBluetoothStatus(bool newStatusBLE);
 
     //Update battery level
     void setBatteryLevel(int newBatteryPercentage);
 
+private:
     // Draws top UI bar: app name, BLE status, battery, time
     void drawCommonUI();
 

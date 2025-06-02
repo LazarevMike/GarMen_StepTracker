@@ -13,6 +13,26 @@ UserInterface::UserInterface() :
   
 }
 
+void UserInterface::updateStepData(int newSteps, int newspm, Pace newPace) {
+  lcd.setStepData(newSteps, newspm, newPace);
+}
+
+void UserInterface::updateHeartRate(int newBPM) {
+  lcd.setHeartRate(newBPM);
+}
+
+void UserInterface::updateCalories(int newCalories) {
+  lcd.setCalories(newCalories);
+}
+
+void UserInterface::updateBluetoothStatus(bool newStatusBLE) {
+  lcd.setBluetoothStatus(newStatusBLE);
+}
+
+void UserInterface::updateBatteryLevel(int newBatteryPercentage) {
+  lcd.setBatteryLevel(newBatteryPercentage);
+}
+
 void UserInterface::testLeds() {
   std::vector<Led*> leds;
   leds.push_back(&BLUE_LED_);
