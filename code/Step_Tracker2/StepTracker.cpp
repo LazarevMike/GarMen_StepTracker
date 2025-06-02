@@ -8,7 +8,7 @@ StepTracker::StepTracker() : displaystate(DisplayState::Steps) {
 void StepTracker::run() {
   stepcounter.update();
   heartmonitor.update();
-  CaloriesCalculator::update(heartmonitor);
+  CaloriesCalculator::update(heartmonitor, stepcounter);
 
   switch (displaystate) {
     case DisplayState::Steps:

@@ -3,7 +3,7 @@
 /*
    Constructor initializes all counters and accumulators to default state.
 */
-StepThresholdCalibrator::StepThresholdCalibrator()
+StepCalibrator::StepCalibrator()
     : idleMax(0), walkMax(0), runMax(0),
       idleSum(0), walkSum(0), runSum(0),
       idleCount(0), walkCount(0), runCount(0),
@@ -13,7 +13,7 @@ StepThresholdCalibrator::StepThresholdCalibrator()
    Begins the calibration process by resetting all counters and setting state to IDLE.
    Recommended sequence: IDLE → WALK → RUN (manually controlled by user).
 */
-void StepThresholdCalibrator::beginCalibration() {
+void StepCalibrator::beginCalibration() {
     idleMax = walkMax = runMax = 0;
     idleSum = walkSum = runSum = 0;
     idleCount = walkCount = runCount = 0;
@@ -24,7 +24,7 @@ void StepThresholdCalibrator::beginCalibration() {
    Updates statistics for the current state using the provided acceleration magnitude.
    Should be called continuously while the user is in the selected pace (IDLE/WALK/RUN).
 */
-void StepThresholdCalibrator::update(float accelMagnitude) {
+void StepCalibrator::update(float accelMagnitude) {
     updateStats(currentState, accelMagnitude);
 }
 
@@ -32,7 +32,7 @@ void StepThresholdCalibrator::update(float accelMagnitude) {
    Helper function that accumulates stats for a given movement state.
    Keeps track of max magnitude and running average.
 */
-void StepThresholdCalibrator::updateStats(State state, float value) {
+void StepCalibrator::updateStats(State state, float value) {
     switch (state) {
         case IDLE:
             idleSum += value;
@@ -58,7 +58,7 @@ void StepThresholdCalibrator::updateStats(State state, float value) {
    Marks the calibration process as complete by finalizing data.
    Can be used to switch out of calibration mode.
 */
-void StepThresholdCalibrator::finish() {
+void StepCalibrator::finish() {
     currentState = NONE;
 }
 
@@ -66,7 +66,7 @@ void StepThresholdCalibrator::finish() {
    Returns true when each pace state (IDLE, WALK, RUN) has sufficient samples collected.
    Threshold for completion can be adjusted if needed.
 */
-bool StepThresholdCalibrator::isComplete() const {
+bool StepCalibrator::isComplete() const {
     return idleCount >= 50 && walkCount >= 50 && runCount >= 50;
 }
 
@@ -74,7 +74,7 @@ bool StepThresholdCalibrator::isComplete() const {
    Computes idle threshold as average of max idle and min walk values.
    This helps distinguish between standing still and starting to walk.
 */
-float StepThresholdCalibrator::getIdleThreshold() const {
+float StepCalibrator::getIdleThreshold() const {
     return (idleMax + walkMax) / 2.0f;
 }
 
@@ -82,7 +82,7 @@ float StepThresholdCalibrator::getIdleThreshold() const {
    Computes walk threshold as average of max walk and min run values.
    This helps distinguish between walking and jogging/running.
 */
-float StepThresholdCalibrator::getWalkThreshold() const {
+float StepCalibrator::getWalkThreshold() const {
     return (walkMax + runMax) / 2.0f;
 }
 
@@ -90,6 +90,6 @@ float StepThresholdCalibrator::getWalkThreshold() const {
    Returns max acceleration observed while running.
    This value can optionally be used as an upper bound in step detection.
 */
-float StepThresholdCalibrator::getRunThreshold() const {
+float StepCalibrator::getRunThreshold() const {
     return runMax;
 }

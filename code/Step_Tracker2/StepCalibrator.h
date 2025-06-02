@@ -6,10 +6,10 @@
    during different movement states (IDLE, WALK, RUN) to determine threshold
    values for step detection and pace classification.
 */
-class StepThresholdCalibrator {
+class StepCalibrator {
 public:
     // Constructor initializes all internal counters and states
-    StepThresholdCalibrator();
+    StepCalibrator();
 
     // Starts the calibration process by resetting all stats and setting the initial state
     void beginCalibration();
@@ -50,4 +50,4 @@ private:
     void updateStats(State state, float value);
 };
 
-#endif // STEPTHRESHOLDCALIBRATOR_H
+#endif // STEPCALIBRATOR_H

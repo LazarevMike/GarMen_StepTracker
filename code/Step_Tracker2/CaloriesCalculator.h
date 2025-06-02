@@ -8,7 +8,7 @@
 class CaloriesCalculator {
 public:
     // Adds interval kcal to running total and returns new total
-    static void update(const HeartRateMonitor& hrMonitor, const StepCounter& stepCounte);
+    static void update(const HeartRateMonitor& hrMonitor, const StepCounter& stepCounter);
 
     // Resets total calories to 0
     static void resetTotal();
