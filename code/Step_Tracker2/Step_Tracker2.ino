@@ -8,7 +8,7 @@
 HeartRateMonitor hrMonitor;
 StepCounter dummyStepCounter;  // Placeholder for now
 CaloriesCalculator calCalc;
-Lcd lcd(dummyStepCounter, hrMonitor, calCalc);
+Lcd lcd;
 StepCounter stepcounter;
 
 // Timer for screen switching

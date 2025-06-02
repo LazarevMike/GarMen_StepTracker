@@ -1,21 +1,5 @@
 #include "Lcd.h"  // Include header for Lcd class
 
-// Graphics and display libraries
-#include <Adafruit_GFX.h>
-#include <Adafruit_ST7789.h>
-#include <math.h>
-
-// Icons and images used on the display
-#include "media/runIcon.h"
-#include "media/walkIcon.h"
-#include "media/idleIcon.h"
-#include "media/flameIconSmall.h"
-#include "media/heartIcon.h"
-#include "media/bluetoothNotConnectedIcon.h"
-#include "media/bluetoothConnectedIcon.h"
-#include "media/flameIconBig.h"
-#include "media/batteryIcon.h"
-
 // Define display control pins
 #define TFT_CS   5
 #define TFT_RST  6
@@ -25,7 +9,7 @@
 Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST);
 
 // Constructor to link external data sources (step counter, HR monitor, calorie tracker)
-Lcd::Lcd(StepCounter& stepCounter, HeartRateMonitor& hrMonitor, CaloriesCalculator& calCalc)
+Lcd::Lcd()
     : currentState(DisplayState::StepsScreen),
       stepCount(0),
       stepsPerMinute(0),
@@ -33,9 +17,6 @@ Lcd::Lcd(StepCounter& stepCounter, HeartRateMonitor& hrMonitor, CaloriesCalculat
       calories(0),
       statusBLE(false),
       pace(Pace::IDLE),
-      stepCounter(stepCounter),
-      hrMonitor(hrMonitor),
-      calCalc(calCalc),
       lastSwitchTime(0),
       lastBatteryTime(0),
       isRunning(true) {}
@@ -50,25 +31,30 @@ void Lcd::begin() {
 }
 
 // Update step-related data from StepCounter
-void Lcd::setStepData() {
-    stepCount = stepCounter.getStepCount();
-    stepsPerMinute = stepCounter.getStepsPerMinute();
-    pace = stepCounter.getPace();
+void Lcd::setStepData(int newSteps, int newspm, Pace newPace) {
+    stepCount = newSteps;
+    stepsPerMinute = newspm;
+    pace = newPace;
 }
 
 // Update current heart rate from HR monitor
-void Lcd::setHeartRate() {
-    bpm = hrMonitor.getLatestBPM();
+void Lcd::setHeartRate(int newBPM) {
+    bpm = newBPM;
 }
 
 // Update total calories burned
-void Lcd::setCalories() {
-    calories = calCalc.getTotal();
+void Lcd::setCalories(int newCalories) {
+    calories = newCalories;
 }
 
 // Update BLE connection status
-void Lcd::bluetoothStatus() {
-    statusBLE = hrMonitor.isConnected();
+void Lcd::bluetoothStatus(bool newStatusBLE) {
+    statusBLE = newStatusBLE;
+}
+
+//Update battery level
+void Lcd::setBatteryLevel(int newBatteryPercentage) {
+    batteryPercentage = newBatteryPercentage;
 }
 
 // Change screen based on state (steps/stats)
@@ -92,8 +78,6 @@ void Lcd::showStepsScreen() {
     tft.fillScreen(ST77XX_BLACK);
     drawCommonUI();          // Optional top bar with time/BLE
 
-    setStepData();           // Load data from StepCounter
-
     updateStateImage();      // Animate walk/idle icon
 
     tft.setTextSize(4);
@@ -116,9 +100,6 @@ void Lcd::showStatsScreen() {
     tft.fillScreen(ST77XX_BLACK);
     drawCommonUI();          // Optional top bar with time/BLE
 
-    setHeartRate();          // Get BPM
-    setCalories();           // Get kcal
-
     tft.drawRGBBitmap(25, 82, heart_img, 49, 49);
     tft.setTextSize(5);
     tft.setCursor(80, 90);
@@ -132,7 +113,6 @@ void Lcd::showStatsScreen() {
 
 // Draw top bar with app name, BLE status, battery, and runtime clock
 void Lcd::drawCommonUI() {
-    bluetoothStatus();  // Update BLE connection state
 
     tft.setTextSize(2);
     tft.setCursor(105, 20);
@@ -176,7 +156,6 @@ void Lcd::updateStateImage() {
 
 // Simulates battery indicator with 3 blocks
 void Lcd::batteryLevel() {
-    int batteryPercentage = 45;  // Hardcoded for now, can be made dynamic
 
     if (batteryPercentage < 33) {
         // Low: only 1 bar

@@ -2,13 +2,13 @@
 #include "Arduino.h"
 
 
-UserInterface::UserInterface(int blueLed_pin, int orangeLed_pin, int greenLed_pin, int resetBtn_pin, int startBtn_pin, int calibBtn_pin) :
-  BLUE_LED_(blueLed_pin),
-  ORANGE_LED_(orangeLed_pin),
-  GREEN_LED_(greenLed_pin),
-  RESET_BTN_(resetBtn_pin),
-  START_BTN_(startBtn_pin),
-  CALIB_BTN_(calibBtn_pin)
+UserInterface::UserInterface() :
+  BLUE_LED_(35),
+  ORANGE_LED_(36),
+  GREEN_LED_(37),
+  RESET_BTN_(21),
+  START_BTN_(26),
+  CALIB_BTN_(33)
 {
   
 }

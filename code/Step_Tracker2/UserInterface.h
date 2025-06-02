@@ -3,6 +3,7 @@
 
 #include "Led.h"
 #include "Button.h"
+#include "Lcd.h"
 #include <vector>
 
 /*
@@ -25,7 +26,7 @@ class UserInterface {
     Constructor of the class.
     Sets initialises Led and Button objects and assignes pins to them. Turns all the LEDs off.
     */
-    UserInterface(int blueLed_pin, int orangeLed_pin, int greenLed_pin, int resetBtn_pin, int startBtn_pin, int calibBtn_pin);
+    UserInterface();
 
     /*
     Method to test functionality of all the leds in the UI. 
@@ -58,6 +59,8 @@ class UserInterface {
     Button RESET_BTN_;
     Button START_BTN_;
     Button CALIB_BTN_;
+
+    Lcd lcd;
 
 };
 

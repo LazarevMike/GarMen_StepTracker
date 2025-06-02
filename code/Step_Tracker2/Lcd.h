@@ -3,9 +3,23 @@
 
 #include <Arduino.h>
 #include <TFT_eSPI.h>  // Graphics library for TFT display
-#include "StepCounter.h"
-#include "HeartRateMonitor.h"
-#include "CaloriesCalculator.h"
+#include <StepCounter.h> // For Pace enum
+
+// Graphics and display libraries
+#include <Adafruit_GFX.h>
+#include <Adafruit_ST7789.h>
+#include <math.h>
+
+// Icons and images used on the display
+#include "media/runIcon.h"
+#include "media/walkIcon.h"
+#include "media/idleIcon.h"
+#include "media/flameIconSmall.h"
+#include "media/heartIcon.h"
+#include "media/bluetoothNotConnectedIcon.h"
+#include "media/bluetoothConnectedIcon.h"
+#include "media/flameIconBig.h"
+#include "media/batteryIcon.h"
 
 // Enum to track which screen is currently being displayed
 enum class DisplayState {
@@ -17,7 +31,7 @@ enum class DisplayState {
 class Lcd {
 public:
     // Constructor: accepts references to other modules
-    Lcd(StepCounter& stepCounter, HeartRateMonitor& hrMonitor, CaloriesCalculator& calCalc);
+    Lcd();
 
     // Initializes the TFT screen
     void begin();
@@ -27,16 +41,19 @@ public:
 
 private:
     // Gathers and updates current step data from StepCounter
-    void setStepData();
+    void setStepData(int newSteps, int newspm, Pace newPace);
 
     // Retrieves the latest BPM from HeartRateMonitor
-    void setHeartRate();
+    void setHeartRate(int newBPM);
 
     // Retrieves total burned calories from CaloriesCalculator
-    void setCalories();
+    void setCalories(int newCalories);
 
     // Updates the BLE connection status
-    void bluetoothStatus();
+    void bluetoothStatus(bool newStatusBLE);
+
+    //Update battery level
+    void setBatteryLevel(int newBatteryPercentage);
 
     // Draws top UI bar: app name, BLE status, battery, time
     void drawCommonUI();
@@ -66,11 +83,8 @@ private:
     int calories;                // Calories burned
     bool statusBLE;              // BLE connection status
     Pace pace;                   // Current user pace (IDLE, WALK, RUN)
+    int batteryPercentage = 45;       // Current battery percentage (0 - 100)%
 
-    // References to other modules (no ownership)
-    StepCounter& stepCounter;
-    HeartRateMonitor& hrMonitor;
-    CaloriesCalculator& calCalc;
 
     // For timing display switching and animations
     unsigned long lastSwitchTime;   // For animation/image switching
