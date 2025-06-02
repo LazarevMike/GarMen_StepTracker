@@ -61,13 +61,22 @@ void Lcd::setBatteryLevel(int newBatteryPercentage) {
 
 // Change screen based on state (steps/stats)
 void Lcd::display(DisplayState newState) {
+
+    unsigned long now = millis();
+    unsigned long interval = 1000 / REFRESH_HZ;
+
+    if (now - lastRefreshTime < interval) {
+        return;  // Not time to refresh yet
+    }
+
+    lastRefreshTime = now;
+
     currentState = newState;
 
     canvas.fillScreen(ST77XX_BLACK);  // full redraw
-    
+
     switch (currentState) {
         case DisplayState::StepsScreen:
-        
             showStepsScreen();
             break;
         case DisplayState::StatsScreen:
@@ -117,7 +126,6 @@ void Lcd::showStatsScreen() {
 
 // Draw top bar with app name, BLE status, battery, and runtime clock
 void Lcd::drawCommonUI() {
-
     canvas.setTextSize(2);
     canvas.setCursor(105, 20);
     canvas.print("GarMen");  // App title
