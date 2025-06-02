@@ -27,7 +27,7 @@ void UserInterface::displayStats() {
 }
 
 void UserInterface::displayCalib() {
-
+  //lcd.display(DisplayState::CalibScreen);
 }
 
 void UserInterface::updateStepData(int newSteps, int newspm, Pace newPace) {
