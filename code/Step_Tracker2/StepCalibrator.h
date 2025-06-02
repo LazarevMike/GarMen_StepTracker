@@ -1,5 +1,5 @@
-#ifndef STEPTHRESHOLDCALIBRATOR_H
-#define STEPTHRESHOLDCALIBRATOR_H
+#ifndef STEPCALIBRATOR_H
+#define STEPCALIBRATOR_H
 
 /*
    Class responsible for collecting and analyzing accelerometer magnitude data

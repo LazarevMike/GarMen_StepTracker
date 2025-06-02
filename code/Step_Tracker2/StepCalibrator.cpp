@@ -1,4 +1,4 @@
-#include "StepThresholdCalibrator.h"
+#include "StepCalibrator.h"
 
 /*
    Constructor initializes all counters and accumulators to default state.

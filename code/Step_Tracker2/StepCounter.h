@@ -33,7 +33,7 @@ public:
     int getStepCount() const;
 
     // Returns estimated steps per minute (based on last 60 seconds)
-    int getStepsPerMinute();
+    int getStepsPerMinute() const;;
 
     // Returns current detected pace (Idle, Walk, or Run)
     Pace getPace() const;

@@ -1,9 +1,31 @@
 #include "CaloriesCalculator.h"
-#include <Arduino.h>
+#include <math.h>
 
 // Initialize static member variables
 unsigned long CaloriesCalculator::lastCalcTime = 0;
 int CaloriesCalculator::totalCalories = 0;
+
+/*
+   CaloriesCalculator class estimates total calories burned using either:
+   - Heart rate (preferred, more accurate)
+   - Step count and pace as fallback when HR monitor is disconnected
+*/
+int CaloriesCalculator::caloriesFromSteps(const StepCounter& stepCounter) {
+    // Rough estimate based on METs and steps
+    int spm = stepCounter.getStepsPerMinute();
+    float met = 1.5f;  // Default light activity
+
+    switch (stepCounter.getPace()) {
+        case WALK: met = 3.5f; break;
+        case RUN:  met = 7.0f; break;
+        default:   met = 1.5f; break;
+    }
+
+    // Formula: kcal/min = MET * weight_kg * 3.5 / 200
+    float kcalPerMin = met * userWeightKg * 3.5f / 200.0f;
+    return static_cast<int>(kcalPerMin * intervalMinutes);
+}
+
 
 /*
  * Calculates estimated kilocalories burned per minute using the heart rate.
@@ -17,7 +39,7 @@ int CaloriesCalculator::calculatePerMinute(const HeartRateMonitor& hrMonitor) {
         (-55.0969f + 0.6309f * heartRate + 0.1988f * userWeightKg + 0.2017f * userAge) / 4.184f
     );
     return static_cast<int>(kcalPerMin);
-}
+}  
 
 /*
  * Calculates total calories burned over the fixed time interval (e.g. 0.5 min).
@@ -31,13 +53,17 @@ int CaloriesCalculator::calculateTotal(const HeartRateMonitor& hrMonitor) {
  * Periodically updates the total calories burned.
  * Only updates if 5 seconds have passed since the last update and the HR monitor is connected.
  */
-void CaloriesCalculator::update(const HeartRateMonitor& hrMonitor) {
+void CaloriesCalculator::update(const HeartRateMonitor& hrMonitor, const StepCounter& stepCounter) {
     unsigned long now = millis();
 
-    // Update every 5 seconds and only when BLE HR device is connected
-    if (now - lastCalcTime >= 5000 && hrMonitor.isConnected()) {
+    if (now - lastCalcTime >= 5000) {
         lastCalcTime = now;
-        totalCalories += calculateTotal(hrMonitor);
+
+        if (hrMonitor.isConnected()) {
+            totalCalories += calculateTotal(hrMonitor);
+        } else {
+            totalCalories += caloriesFromSteps(stepCounter);
+        }
     }
 }
 
