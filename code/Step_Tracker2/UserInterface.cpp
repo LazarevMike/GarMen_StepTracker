@@ -1,3 +1,4 @@
+#include "soc/gpio_sig_map.h"
 #include "UserInterface.h"
 #include "Arduino.h"
 
@@ -14,40 +15,40 @@ UserInterface::UserInterface() :
 }
 
 void UserInterface::begin() {
-  lcd.begin();
+  LCD_.begin();
 }
 
 void UserInterface::displaySteps() {
-  lcd.display(DisplayState::StepsScreen);
+  LCD_.display(DisplayState::StepsScreen);
 }
 
 void UserInterface::displayStats() {
-  lcd.display(DisplayState::StatsScreen);
+  LCD_.display(DisplayState::StatsScreen);
 
 }
 
 void UserInterface::displayCalib() {
-  //lcd.display(DisplayState::CalibScreen);
+  LCD_.display(DisplayState::CalibScreen);
 }
 
 void UserInterface::updateStepData(int newSteps, int newspm, Pace newPace) {
-  lcd.setStepData(newSteps, newspm, newPace);
+  LCD_.setStepData(newSteps, newspm, newPace);
 }
 
 void UserInterface::updateHeartRate(int newBPM) {
-  lcd.setHeartRate(newBPM);
+  LCD_.setHeartRate(newBPM);
 }
 
 void UserInterface::updateCalories(int newCalories) {
-  lcd.setCalories(newCalories);
+  LCD_.setCalories(newCalories);
 }
 
 void UserInterface::updateBluetoothStatus(bool newStatusBLE) {
-  lcd.setBluetoothStatus(newStatusBLE);
+  LCD_.setBluetoothStatus(newStatusBLE);
 }
 
 void UserInterface::updateBatteryLevel(int newBatteryPercentage) {
-  lcd.setBatteryLevel(newBatteryPercentage);
+  LCD_.setBatteryLevel(newBatteryPercentage);
 }
 
 void UserInterface::testLeds() {

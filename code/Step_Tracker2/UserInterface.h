@@ -83,7 +83,7 @@ class UserInterface {
     Button START_BTN_;
     Button CALIB_BTN_;
 
-    Lcd lcd;
+    Lcd LCD_;
 
 };
 

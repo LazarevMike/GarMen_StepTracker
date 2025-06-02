@@ -59,7 +59,6 @@ void Lcd::setBatteryLevel(int newBatteryPercentage) {
 
 // Change screen based on state (steps/stats)
 void Lcd::display(DisplayState newState) {
-    if (newState == currentState) return;  // Prevent unnecessary redraw
 
     currentState = newState;
 
