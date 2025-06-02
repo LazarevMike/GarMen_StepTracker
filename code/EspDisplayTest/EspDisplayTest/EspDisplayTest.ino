@@ -55,100 +55,34 @@ void setup() {
   tft.setRotation(3);
   tft.fillScreen(ST77XX_BLACK);
 
-  // Print title
-  tft.setTextSize(2);
-  tft.setTextColor(ST77XX_WHITE);
-  tft.setTextWrap(false);
-  const char* message = "GarMen";
-  int16_t x1, y1;
-  uint16_t w, h;
-  tft.getTextBounds(message, 0, 0, &x1, &y1, &w, &h);
-  int xText = (tft.width() - w) / 2;
-  tft.setCursor(xText, yText);
-  tft.print(message);
 
-  // Show initial running image
-  tft.drawRGBBitmap(xImg, yImg, whiterun_img, 80, 82);
-
-  // Score / Distance / SPM
-  tft.setTextSize(4);
-  tft.setCursor(80, 130);
-  tft.print("00000");
-
-  tft.setTextSize(2.5);
-  tft.setCursor(100, 170);
-  tft.print("/10000");
-
-  tft.setTextSize(2);
-  tft.setCursor(85, 200);
-  tft.print("SPM ");
-
-  tft.setCursor(130, 200);
-  tft.print("2.5");
-
-  tft.drawRGBBitmap(170, 197, flame_img, 19, 19);
 }
 
 void loop() {
-  // --- IMAGE TOGGLING ---
-  if (millis() - lastSwitchTime >= 5000) {
-    lastSwitchTime = millis();
-    isRunning = !isRunning;
+  tft.setTextSize(2);
+  tft.setCursor(105, 20);
+  tft.print("GarMen");  // App title
 
-    tft.fillRect(xImg, yImg, maxImageWidth, maxImageHeight, ST77XX_BLACK);
 
-    if (isRunning) {
-      tft.drawRGBBitmap(xImg, yImg, whiterun_img, 80, 82);
-    } else {
-      tft.drawRGBBitmap(xImg, yImg, idle_img, 80, 88);
-    }
-  }
+  // should recieve this data type
+  const char* axis = "-X";
+  float xAxisValue = -0.14;
+  float yAxisValue = -0.84;
+  float zAxisValue = -3.58;
 
-  // --- TIMER DISPLAY ---
-  if (millis() - lastTimerUpdate >= 1000) {
-    lastTimerUpdate = millis();
-    elapsedSeconds++;
+  tft.setTextSize(3);
+  tft.setCursor(20, 80);
+  tft.printf("Calib axis:%s", axis);
 
-    int hours = elapsedSeconds / 3600;
-    int minutes = (elapsedSeconds % 3600) / 60;
-    int seconds = elapsedSeconds % 60;
+  tft.setTextSize(2);
+  tft.setCursor(20, 140);
+  tft.printf("X:%.2f", xAxisValue);
 
-    char timerBuf[9];
-    sprintf(timerBuf, "%02d:%02d:%02d", hours, minutes, seconds);
+  tft.setCursor(100, 170);
+  tft.printf("Y:%.2f", yAxisValue);
 
-    tft.fillRect(5, 20, 80, 30, ST77XX_BLACK);
-    tft.setTextSize(1);
-    tft.setTextColor(ST77XX_WHITE);
-    tft.setCursor(5, 20);
-    tft.print("Timer");
-
-    tft.setCursor(5, 30);
-    tft.print(timerBuf);
-  }
-
-  // --- STEP COUNTER LOGIC ---
-  int xRaw = analogRead(ADXL_X);
-  int yRaw = analogRead(ADXL_Y);
-  int zRaw = analogRead(ADXL_Z);
-
-  float x = (float)xRaw;
-  float y = (float)yRaw;
-  float z = (float)zRaw;
-
-  float magnitude = sqrt(x * x + y * y + z * z);
-
-  float gain = 0.2;  // Sensitivity scaling
-  float delta = (magnitude - prevMagnitude) * gain;
-
-  if (delta > 10 && millis() - lastStepTime > 300) {
-    steps++;
-    lastStepTime = millis();
-
-    Serial.print("Steps: ");
-    Serial.println(steps);
-  }
-
-  prevMagnitude = magnitude;
+  tft.setCursor(180, 140);
+  tft.printf("Z:%.2f", zAxisValue);
 
   delay(50);  // ~20Hz sampling
 }
