@@ -143,17 +143,37 @@ void Lcd::bluetoothStateImage() {
 
 // Switches between walk and idle icons every 5s
 void Lcd::updateStateImage() {
-    if (millis() - lastSwitchTime >= 5000) {
-        lastSwitchTime = millis();
-        isRunning = !isRunning;
+    int xImg = (280 - 80) / 2;
+    int yImg = 40;
+    tft.fillRect(xImg, yImg, 80, 90, ST77XX_BLACK);  // Clear previous image
 
-        int xImg = (280 - 80) / 2;
-        int yImg = 40;
-        tft.fillRect(xImg, yImg, 80, 90, ST77XX_BLACK);  // Clear previous image
-        const uint16_t* img = isRunning ? walk_img : idle_img;
-        int h = isRunning ? 82 : 88;
-        tft.drawRGBBitmap(xImg, yImg, img, 80, h);
+    const uint16_t* img = nullptr;
+    int h = 0;
+
+    switch (pace) {
+        case Pace::IDLE:
+            img = idle_img;
+            h = 88;
+            break;
+
+        case Pace::WALK:
+            img = walk_img;
+            h = 82;
+            break;
+
+        case Pace::RUN:
+            img = run_img;
+            h = 82;
+            break;
+        
+        default:
+            img = idle_img;
+            h = 88;
+            break;
     }
+    
+    // Display state image
+    tft.drawRGBBitmap(xImg, yImg, img, 80, h);
 }
 
 // Simulates battery indicator with 3 blocks
@@ -179,6 +199,7 @@ void Lcd::batteryLevel() {
 
 // Draw calibration screen with axis values axis calibrating
 void Lcd::showCalibrationScreen() {
+    tft.fillScreen(ST77XX_BLACK);
     drawCommonUI();
 
     // should recieve this data type
