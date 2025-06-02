@@ -65,10 +65,13 @@ void Lcd::display(DisplayState newState) {
 
     switch (newState) {
         case DisplayState::StepsScreen:
-            showCalibrationScreen();
+            showStepsScreen();
             break;
         case DisplayState::StatsScreen:
             showStatsScreen();
+            break;
+        case DisplayState::CalibScreen:
+            showCalibrationScreen();
             break;
     }
 }
@@ -175,10 +178,9 @@ void Lcd::batteryLevel() {
     }
 }
 
-
+// Draw calibration screen with axis values axis calibrating
 void Lcd::showCalibrationScreen() {
     drawCommonUI();
-
 
     // should recieve this data type
     const char* axis = "-X";
@@ -199,5 +201,4 @@ void Lcd::showCalibrationScreen() {
 
     tft.setCursor(180, 140);
     tft.printf("Z:%.2f", zAxisValue);
-
 }

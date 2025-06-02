@@ -24,7 +24,8 @@
 // Enum to track which screen is currently being displayed
 enum class DisplayState {
     StepsScreen,  // Screen showing step data and pace
-    StatsScreen   // Screen showing heart rate and calories
+    StatsScreen,   // Screen showing heart rate and calories
+    CalibScreen
 };
 
 // Lcd class handles all screen-related logic and drawing
