@@ -42,6 +42,10 @@ void StepCounter::update() {
         // Update pace (Idle, Walk, Run) based on timing between steps
         updatePace(stepInterval);
     }
+
+    if (stepInterval > IDLE_THRESHOLD) {
+        updatePace(stepInterval);
+    }
 }
 
 /*
@@ -77,9 +81,9 @@ bool StepCounter::detectStep(float magnitude) {
    Uses simple thresholds for distinguishing walk/run/idle.
 */
 void StepCounter::updatePace(unsigned long stepInterval) {
-    if (stepInterval > 2000) {
+    if (stepInterval > IDLE_THRESHOLD) {
         currentPace = IDLE;
-    } else if (stepInterval > 500) {
+    } else if (stepInterval > WALKING_THRESHOLD) {
         currentPace = WALK;
     } else {
         currentPace = RUN;

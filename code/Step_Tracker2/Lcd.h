@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include <TFT_eSPI.h>  // Graphics library for TFT display
 #include <StepCounter.h> // For Pace enum
+#include <DisplayState.h>
 
 // Graphics and display libraries
 #include <Adafruit_GFX.h>
@@ -20,13 +21,6 @@
 #include "media/bluetoothConnectedIcon.h"
 #include "media/flameIconBig.h"
 #include "media/batteryIcon.h"
-
-// Enum to track which screen is currently being displayed
-enum class DisplayState {
-    StepsScreen,  // Screen showing step data and pace
-    StatsScreen,   // Screen showing heart rate and calories
-    CalibScreen
-};
 
 // Lcd class handles all screen-related logic and drawing
 class Lcd {

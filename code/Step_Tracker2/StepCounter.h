@@ -46,7 +46,7 @@ private:
     int stepCount;
     unsigned long lastStepTime;
     unsigned long lastResetTime;
-    const unsigned long MIN_STEP_INTERVAL = 250;
+    
 
     float thresholdHigh = 1.2f; // Step detected when passing above this
     float thresholdLow = 0.8f;  // Confirmed step when dropping below this
@@ -59,6 +59,10 @@ private:
 
     // Current pace classification
     Pace currentPace;
+
+    const unsigned int IDLE_THRESHOLD = 2000;
+    const unsigned int WALKING_THRESHOLD = 500;
+    const unsigned int MIN_STEP_INTERVAL = 200;
 
     // Calculates magnitude of 3D acceleration vector
     float calculateMagnitude(float x, float y, float z);

@@ -12,7 +12,7 @@ Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST);
 Lcd::Lcd()
     :
       canvas(280, 240), 
-      currentState(DisplayState::StepsScreen),
+      currentState(DisplayState::Steps),
       stepCount(0),
       stepsPerMinute(0),
       bpm(0),
@@ -66,14 +66,14 @@ void Lcd::display(DisplayState newState) {
     canvas.fillScreen(ST77XX_BLACK);  // full redraw
     
     switch (currentState) {
-        case DisplayState::StepsScreen:
+        case DisplayState::Steps:
         
             showStepsScreen();
             break;
-        case DisplayState::StatsScreen:
+        case DisplayState::Stats:
             showStatsScreen();
             break;
-        case DisplayState::CalibScreen:
+        case DisplayState::Calibration:
             showCalibrationScreen();
             break;
     }

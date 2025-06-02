@@ -4,6 +4,7 @@
 #include "Led.h"
 #include "Button.h"
 #include "Lcd.h"
+#include <DisplayState.h>
 #include <vector>
 
 /*
@@ -35,6 +36,8 @@ class UserInterface {
     void displayStats();
 
     void displayCalib();
+
+    void displayInfo(DisplayState state);
 
     // Gathers and updates current step data from StepCounter
     void updateStepData(int newSteps, int newspm, Pace newPace);

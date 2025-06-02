@@ -19,16 +19,20 @@ void UserInterface::begin() {
 }
 
 void UserInterface::displaySteps() {
-  LCD_.display(DisplayState::StepsScreen);
+  LCD_.display(DisplayState::Steps);
 }
 
 void UserInterface::displayStats() {
-  LCD_.display(DisplayState::StatsScreen);
+  LCD_.display(DisplayState::Stats);
 
 }
 
 void UserInterface::displayCalib() {
-  LCD_.display(DisplayState::CalibScreen);
+  LCD_.display(DisplayState::Calibration);
+}
+
+void UserInterface::displayInfo(DisplayState state) {
+  LCD_.display(state);
 }
 
 void UserInterface::updateStepData(int newSteps, int newspm, Pace newPace) {

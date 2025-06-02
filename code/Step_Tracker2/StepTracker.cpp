@@ -1,16 +1,45 @@
 #include <Arduino.h>
 #include <StepTracker.h>
 
-StepTracker::StepTracker() {
+StepTracker::StepTracker() : displaystate(DisplayState::Steps) {
 
 }
 
 void StepTracker::run() {
   stepcounter.update();
-  ui.updateStepData(stepcounter.getStepCount(), stepcounter.getStepsPerMinute(), stepcounter.getPace());
-  ui.displaySteps();
-  //delay(1000);
+  heartmonitor.update();
+  CaloriesCalculator::update(heartmonitor);
 
+  switch (displaystate) {
+    case DisplayState::Steps:
+      ui.updateStepData(stepcounter.getStepCount(), stepcounter.getStepsPerMinute(), stepcounter.getPace());
+      break;
+
+    case DisplayState::Stats:
+      ui.updateHeartRate(heartmonitor.getLatestBPM());
+      ui.updateCalories(CaloriesCalculator::getTotal());
+      break;
+    
+    case DisplayState::Calibration:
+      break;
+  
+  }
+
+  if (ui.isCalibPressed()) {
+    switch (displaystate) {
+      case DisplayState::Steps:
+        displaystate = DisplayState::Stats;
+        break;
+
+      case DisplayState::Stats:
+        displaystate = DisplayState::Steps;
+        break;
+    }
+  
+  }
+
+  ui.displayInfo(displaystate);
+  //delay(1000);
 }
 
 void StepTracker::start() {

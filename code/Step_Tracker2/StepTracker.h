@@ -6,6 +6,7 @@
 #include <UserInterface.h>
 #include <CaloriesCalculator.h>
 #include <HeartRateMonitor.h>
+#include <DisplayState.h>
 
 
 class StepTracker {
@@ -28,9 +29,9 @@ public:
 private:
   StepCounter stepcounter;
   UserInterface ui;
-  CaloriesCalculator calcalc;
   HeartRateMonitor heartmonitor;
-
+  DisplayState displaystate;
+  
 };
 
 #endif
