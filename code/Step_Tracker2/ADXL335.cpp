@@ -1,7 +1,7 @@
 #include "ADXL335.h"
 #include "Arduino.h"
 
-ADXL335::ADXL335(int x_pin, int y_pin, int z_pin, int st_pin) : X_PIN_(x_pin), Y_PIN_(y_pin), Z_PIN_(z_pin), ST_PIN_(st_pin) {
+ADXL335::ADXL335() : X_PIN_(8), Y_PIN_(13), Z_PIN_(9), ST_PIN_(34) {
   pinMode(X_PIN_, INPUT);
   pinMode(Y_PIN_, INPUT);
   pinMode(Z_PIN_, INPUT);
@@ -21,6 +21,21 @@ int ADXL335::readY() {
 
 int ADXL335::readZ() {
   return analogRead(Z_PIN_);
+}
+
+
+float ADXL335::readAccelX() {
+  return convertADCtoAccel(readX());
+}
+
+
+float ADXL335::readAccelY() {
+  return convertADCtoAccel(readY());
+}
+    
+
+float ADXL335::readAccelZ() {
+  return convertADCtoAccel(readZ());
 }
 
 void ADXL335::triggerSt(bool new_state) {

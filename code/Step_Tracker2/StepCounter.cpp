@@ -25,14 +25,14 @@ void StepCounter::begin() {
    Computes acceleration magnitude, detects steps, timestamps them,
    and updates pace classification.
 */
-void StepCounter::update(float accelX, float accelY, float accelZ) {
-    float mag = calculateMagnitude(accelX, accelY, accelZ);
+void StepCounter::update() {
+    float mag = calculateMagnitude(adxl.readAccelX(), adxl.readAccelY(), adxl.readAccelZ());
+    unsigned long now = millis();
+    unsigned long stepInterval = now - lastStepTime;
 
-    if (detectStep(mag)) {
+    if (detectStep(mag) && stepInterval >= MIN_STEP_INTERVAL) {
         stepCount++;
-        unsigned long now = millis();
-
-        unsigned long interval = now - lastStepTime;
+        
         lastStepTime = now;
 
         // Store timestamp for step-per-minute estimation
@@ -40,7 +40,7 @@ void StepCounter::update(float accelX, float accelY, float accelZ) {
         stepTimestampIndex = (stepTimestampIndex + 1) % 20;
 
         // Update pace (Idle, Walk, Run) based on timing between steps
-        updatePace(interval);
+        updatePace(stepInterval);
     }
 }
 
@@ -58,9 +58,6 @@ float StepCounter::calculateMagnitude(float x, float y, float z) {
 bool StepCounter::detectStep(float magnitude) {
     static float prevMag = 0;
     static bool stepInProgress = false;
-
-    float thresholdHigh = 1.2f; // Step detected when passing above this
-    float thresholdLow = 0.8f;  // Confirmed step when dropping below this
 
     bool isStep = false;
 

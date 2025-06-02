@@ -15,7 +15,7 @@ class ADXL335 {
     Constructor for the object.
     Sets class fields for pins, does pinModes and disables st pin.
     */ 
-    ADXL335(int x_pin, int y_pin, int z_pin, int st_pin);      // Constructor
+    ADXL335();      // Constructor
     
     //Reading ADC value from X axis
     int readX();
@@ -25,6 +25,16 @@ class ADXL335 {
 
     //Reading ADC value from Z axis
     int readZ();
+
+    //Reading acceleration from X axis
+    float readAccelX();
+
+    //Reading acceleration from Y axis
+    float readAccelY();
+    
+    //Reading acceleration from Z axis
+    float readAccelZ();
+
 
     /*
     Triggering st pin to desired state defined by parameter new_state.
