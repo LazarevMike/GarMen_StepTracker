@@ -82,12 +82,14 @@ void StepTracker::pause() {
   ui.triggerBlue(1);
   ui.triggerGreen(1);
   ui.triggerOrange(1);
+  ui.updatePause(isPaused);
 }
 
 void StepTracker::resume() {
   isPaused = false;
   startTimeStamp = millis();
   setLeds(pace_);
+  ui.updatePause(isPaused);
   update();
 }
 

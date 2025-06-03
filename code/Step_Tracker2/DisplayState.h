@@ -4,7 +4,7 @@
 enum class DisplayState {
     Steps,
     Stats,
-    Calibration,
+    Calibration
 };
 
 #endif
