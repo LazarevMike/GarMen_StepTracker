@@ -68,7 +68,8 @@ class ADXL335 {
     Used for inverting signal from x axis and ADC to acceleration conversion.
     Explained by a slight voltage drop on the output resistor on each axis.
     */
-    const int ADC_OFFSET_ = 138;
+    //const int ADC_OFFSET_ = 138;
+    const int ADC_OFFSET_ = 230;
 
     //Sensitivity of ADXL335 from datasheet, experimentally defined to be at 0.31 (datasheet range 0.27 - 0.33)
     const float SENSITIVITY_ = 0.31;
