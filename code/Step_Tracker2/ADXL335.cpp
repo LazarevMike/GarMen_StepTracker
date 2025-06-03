@@ -31,7 +31,8 @@ void ADXL335::adjustOffsetY() {
 }
     
 void ADXL335::adjustOffsetZ() {
-  Z_ADC_OFFSET_ = ((1.65 + SENSITIVITY_) / 3.3) * 4095 - readZ();
+  //Because adjusting on -g
+  Z_ADC_OFFSET_ = ((1.65 - SENSITIVITY_) / 3.3) * 4095 - readZ();
 }
 
 float ADXL335::readAccelX() {
