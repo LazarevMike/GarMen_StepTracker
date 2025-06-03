@@ -97,10 +97,12 @@ void StepTracker::update() {
   
   stepcounter.update();
   heartmonitor.update();
-  CaloriesCalculator::update(heartmonitor, stepcounter);
+  ui.updateBluetoothStatus(heartmonitor.isConnected());
+  ui.updateHeartRate(heartmonitor.getLatestBPM());
   Pace new_pace = stepcounter.getPace();
   ui.updateStepData(stepcounter.getStepCount(), stepcounter.getStepsPerMinute(), new_pace);
-  ui.updateHeartRate(heartmonitor.getLatestBPM());
+  CaloriesCalculator::update(heartmonitor, stepcounter);
+
   ui.updateCalories(CaloriesCalculator::getTotal());
   ui.updateTime(elapsedTime);
 
