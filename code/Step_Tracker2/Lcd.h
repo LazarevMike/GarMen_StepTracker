@@ -21,6 +21,8 @@
 #include "media/bluetoothConnectedIcon.h"
 #include "media/flameIconBig.h"
 #include "media/batteryIcon.h"
+#include "media/pauseIcon.h"
+
 
 // Lcd class handles all screen-related logic and drawing
 class Lcd {
@@ -48,6 +50,9 @@ public:
 
     //Update battery level
     void setBatteryLevel(int newBatteryPercentage);
+
+    // Checks if screen is paused
+    void setPaused(bool paused);
 
     // Update time of workout
     void setTime(unsigned long time);
@@ -92,6 +97,7 @@ private:
     Pace pace;                   // Current user pace (IDLE, WALK, RUN)
     int batteryPercentage = 45;       // Current battery percentage (0 - 100)%
     unsigned long seconds;
+    bool isPaused;
 
     int selected_axis;
     float X_axis;

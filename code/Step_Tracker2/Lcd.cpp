@@ -21,7 +21,8 @@ Lcd::Lcd()
       pace(Pace::IDLE),
       lastSwitchTime(0),
       lastBatteryTime(0),
-      isRunning(true) {}
+      isRunning(true),
+      isPaused(false) {}
 
 // Initialize the TFT display
 void Lcd::begin() {
@@ -61,6 +62,10 @@ void Lcd::setBatteryLevel(int newBatteryPercentage) {
 
 void Lcd::setTime(unsigned long time) {
     seconds = time;
+}   
+
+void Lcd::setPaused(bool paused) {
+    isPaused = paused;
 }   
 
 void Lcd::setAxisAccels(int axis_id, float X_reading, float Y_reading, float Z_reading) {
@@ -118,6 +123,8 @@ void Lcd::showStepsScreen() {
     canvas.setTextSize(2);
     canvas.setCursor(85, 200);
     canvas.printf("SPM %.1f", stepsPerMinute);
+
+    canvas.drawRGBBitmap(170, 197, flame_small_img, 19, 19);
 }
 
 // Draw stats screen with heart rate and calories
@@ -150,6 +157,10 @@ void Lcd::drawCommonUI() {
     canvas.setTextSize(2);
     canvas.setCursor(10, 20);
     canvas.printf("%02lu:%02lu", seconds / 60, seconds % 60);
+
+    if (isPaused) {
+        canvas.drawRGBBitmap(220, 190, pause_img, 44, 44);
+    }
 }
 
 // Draw BLE connection icon depending on connection state

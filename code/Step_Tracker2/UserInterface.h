@@ -53,6 +53,9 @@ class UserInterface {
     // Updates the BLE connection status
     void updateBluetoothStatus(bool newStatusBLE);
 
+    // Updates paused state of system
+    void updatePause(bool paused);
+
     //Update battery level
     void updateBatteryLevel(int newBatteryPercentage);
 

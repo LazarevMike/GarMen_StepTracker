@@ -66,6 +66,10 @@ void UserInterface::updateBatteryLevel(int newBatteryPercentage) {
   LCD_.setBatteryLevel(newBatteryPercentage);
 }
 
+void UserInterface::updatePause(bool paused) {
+  LCD_.setPaused(paused);
+}
+
 void UserInterface::updateTime(unsigned long time) {
   LCD_.setTime(time);
 }
