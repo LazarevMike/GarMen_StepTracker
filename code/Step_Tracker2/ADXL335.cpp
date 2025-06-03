@@ -1,7 +1,8 @@
 #include "ADXL335.h"
 #include "Arduino.h"
 
-ADXL335::ADXL335() : X_PIN_(8), Y_PIN_(13), Z_PIN_(9), ST_PIN_(34) {
+ADXL335::ADXL335() : X_PIN_(8), Y_PIN_(13), Z_PIN_(9), ST_PIN_(34), 
+X_ADC_OFFSET_(DEFALUT_ADC_OFFSET_), Y_ADC_OFFSET_(DEFALUT_ADC_OFFSET_), Z_ADC_OFFSET_(DEFALUT_ADC_OFFSET_) {
   pinMode(X_PIN_, INPUT);
   pinMode(Y_PIN_, INPUT);
   pinMode(Z_PIN_, INPUT);
@@ -10,9 +11,7 @@ ADXL335::ADXL335() : X_PIN_(8), Y_PIN_(13), Z_PIN_(9), ST_PIN_(34) {
 }
 
 int ADXL335::readX() {
-  //The return value in inverted reading
-  //Inversion is required as the output from hardaware is inverted.
-  return 4095 - ADC_OFFSET_ * 2 - analogRead(X_PIN_);
+  return analogRead(X_PIN_);
 }
 
 int ADXL335::readY() {
@@ -23,19 +22,30 @@ int ADXL335::readZ() {
   return analogRead(Z_PIN_);
 }
 
-
-float ADXL335::readAccelX() {
-  return convertADCtoAccel(readX());
+void ADXL335::adjustOffsetX() {
+  X_ADC_OFFSET_ = ((1.65 - SENSITIVITY_) / 3.3) * 4095 - readX();
 }
 
+void ADXL335::adjustOffsetY() {
+  Y_ADC_OFFSET_ = ((1.65 + SENSITIVITY_) / 3.3) * 4095 - readY();
+}
+    
+void ADXL335::adjustOffsetZ() {
+  Z_ADC_OFFSET_ = ((1.65 + SENSITIVITY_) / 3.3) * 4095 - readZ();
+}
+
+float ADXL335::readAccelX() {
+  // By hardware x is inverted
+  return -convertADCtoAccel(readX() + X_ADC_OFFSET_);
+}
 
 float ADXL335::readAccelY() {
-  return convertADCtoAccel(readY());
+  return convertADCtoAccel(readY() + Y_ADC_OFFSET_);
 }
     
 
 float ADXL335::readAccelZ() {
-  return convertADCtoAccel(readZ());
+  return convertADCtoAccel(readZ() + Z_ADC_OFFSET_);
 }
 
 void ADXL335::triggerSt(bool new_state) {
@@ -50,6 +60,6 @@ bool ADXL335::getStState() {
 }
 
 float ADXL335::convertADCtoAccel(int adc_reading) {
-  float voltage = (adc_reading + ADC_OFFSET_)/4095.0 * 3.3;
+  float voltage = (adc_reading)/4095.0 * 3.3;
   return (voltage - 1.65) / SENSITIVITY_;
 }

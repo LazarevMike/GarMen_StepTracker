@@ -65,10 +65,6 @@ private:
     float thresholdHigh = 1.2f; // Step detected when passing above this
     float thresholdLow = 1.0f;  // Confirmed step when dropping below this
 
-    float X_offset;
-    float Y_offset;
-    float Z_offset;
-
     ADXL335 adxl;
 
     // Rolling buffer to store timestamps of recent steps (for SPM calc)

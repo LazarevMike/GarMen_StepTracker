@@ -8,10 +8,7 @@ StepCounter::StepCounter()
       lastStepTime(0),
       lastResetTime(0),
       stepTimestampIndex(0),
-      currentPace(IDLE),
-      X_offset(0),
-      Y_offset(0),
-      Z_offset(0)
+      currentPace(IDLE)
 {
     memset(stepTimestamps, 0, sizeof(stepTimestamps));
 }
@@ -52,15 +49,15 @@ void StepCounter::update() {
 }
 
 void StepCounter::adjustX() {
-    X_offset = 1.0 - getX();
+    adxl.adjustOffsetX();
 }
 
 void StepCounter::adjustY() {
-    Y_offset = 1.0 - getY();
+    adxl.adjustOffsetY();
 }
 
 void StepCounter::adjustZ() {
-    Z_offset = - 1.0 - getZ();
+    adxl.adjustOffsetZ();
 }
 
 /*
@@ -141,15 +138,15 @@ Pace StepCounter::getPace() const {
 }
 
 float StepCounter::getX() {
-    return adxl.readAccelX() + X_offset;
+    return adxl.readAccelX();
 }
     
 float StepCounter::getY() {
-    return adxl.readAccelY() + Y_offset;
+    return adxl.readAccelY();
 }
 
 float StepCounter::getZ() {
-    return adxl.readAccelZ() + Z_offset;
+    return adxl.readAccelZ();
 }
 /*
    Resets step counter, pace, and all internal state for fresh measurement.

@@ -35,6 +35,12 @@ class ADXL335 {
     //Reading acceleration from Z axis
     float readAccelZ();
 
+    void adjustOffsetX();
+
+    void adjustOffsetY();
+    
+    void adjustOffsetZ();
+
 
     /*
     Triggering st pin to desired state defined by parameter new_state.
@@ -69,7 +75,10 @@ class ADXL335 {
     Explained by a slight voltage drop on the output resistor on each axis.
     */
     //const int ADC_OFFSET_ = 138;
-    const int ADC_OFFSET_ = 230;
+    const int DEFALUT_ADC_OFFSET_ = 230;
+    int X_ADC_OFFSET_;
+    int Y_ADC_OFFSET_;
+    int Z_ADC_OFFSET_;
 
     //Sensitivity of ADXL335 from datasheet, experimentally defined to be at 0.31 (datasheet range 0.27 - 0.33)
     const float SENSITIVITY_ = 0.31;
