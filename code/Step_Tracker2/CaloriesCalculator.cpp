@@ -29,9 +29,8 @@ float CaloriesCalculator::caloriesFromSteps(const StepCounter& stepCounter) {
  */
 float CaloriesCalculator::calculatePerMinute(const HeartRateMonitor& hrMonitor) {
     int heartRate = hrMonitor.getLatestBPM();
-    return fabsf(
-        (-55.0969f + 0.6309f * heartRate + 0.1988f * userWeightKg + 0.2017f * userAge) / 4.184f
-    );
+
+    return max(0.0f, (-95.7735f + 0.634f * heartRate + 0.404f * userWeightKg + 0.394f * userAge) / 4.184f);
 }
 
 /*
