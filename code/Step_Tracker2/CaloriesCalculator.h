@@ -18,18 +18,18 @@ public:
 
 private:
     // Estimate kcal burned in 1 minute using current heart rate
-    static int calculatePerMinute(const HeartRateMonitor& hrMonitor);
+    static float calculatePerMinute(const HeartRateMonitor& hrMonitor);
 
     // Returns kcal burned for fixed interval
-    static int calculateTotal(const HeartRateMonitor& hrMonitor);
+    static float calculateTotal(const HeartRateMonitor& hrMonitor);
 
-    static int caloriesFromSteps(const StepCounter& stepCounter);
+    static float caloriesFromSteps(const StepCounter& stepCounter);
 
     static constexpr float userWeightKg = 90.0f;
     static constexpr int userAge = 22;
     static constexpr float intervalMinutes = 0.5f;
     static unsigned long lastCalcTime;
-    static int totalCalories;
+    static float totalCalories;
 };
 
 #endif // CALORIESCALCULATOR_H
