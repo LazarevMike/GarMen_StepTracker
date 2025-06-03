@@ -123,6 +123,8 @@ void Lcd::showStepsScreen() {
     canvas.setTextSize(2);
     canvas.setCursor(85, 200);
     canvas.printf("SPM %.1f", stepsPerMinute);
+
+    canvas.drawRGBBitmap(170, 197, flame_small_img, 19, 19);
 }
 
 // Draw stats screen with heart rate and calories
