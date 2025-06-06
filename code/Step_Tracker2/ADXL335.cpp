@@ -53,7 +53,20 @@ void ADXL335::triggerSt(bool new_state) {
   st_state_ = new_state;
   //Inverted because by design st pin driver is active low
   digitalWrite(ST_PIN_, !st_state_);
-  
+}
+
+bool ADXL335::selfTest() {
+  float x1 = readAccelX();
+  float y1 = readAccelY();
+  float z1 = readAccelZ();
+  triggerSt(true);
+  delay(300);
+  float x2 = readAccelX();
+  float y2 = readAccelY();
+  float z2 = readAccelZ();
+  bool outcome = (x2 - x1 > -0.9 && y2 - y1 > 0.9 && z2 - z1 > 1.5);
+  triggerSt(false);
+  return outcome; 
 }
 
 bool ADXL335::getStState() {

@@ -55,6 +55,8 @@ public:
     // Resets all internal counters and timestamps
     void reset();
 
+    bool selfTest();
+
 private:
     // Step tracking
     int stepCount;

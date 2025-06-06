@@ -159,3 +159,7 @@ void StepCounter::reset() {
     currentPace = IDLE;
     memset(stepTimestamps, 0, sizeof(stepTimestamps));
 }
+
+bool StepCounter::selfTest() {
+    return adxl.selfTest();
+}

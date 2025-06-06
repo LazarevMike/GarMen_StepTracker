@@ -41,6 +41,8 @@ class ADXL335 {
     
     void adjustOffsetZ();
 
+    bool selfTest();
+
 
     /*
     Triggering st pin to desired state defined by parameter new_state.

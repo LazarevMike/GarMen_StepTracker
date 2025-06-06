@@ -64,6 +64,7 @@ void StepTracker::start() {
   stepcounter.begin();
   heartmonitor.begin();
   clock.start();
+  selfTest();
   setLeds(pace_);
 }
 
@@ -158,4 +159,21 @@ void StepTracker::calibrate() {
       resume();
     }
   }
+}
+
+void StepTracker::selfTest() {
+  displaystate = DisplayState::SelfTest;
+  ui.displayInfo(displaystate);
+  bool outcome = stepcounter.selfTest();
+  if (outcome) {
+    ui.triggerBlue(true);
+  }
+  else {
+    ui.triggerOrange(true);
+  }
+
+  ui.updateSTOutcome(outcome);
+  ui.displayInfo(displaystate);
+  delay(1000);
+  displaystate = DisplayState::Steps;
 }

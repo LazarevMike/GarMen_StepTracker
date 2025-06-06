@@ -78,6 +78,10 @@ void UserInterface::updateAxisAccels(int axis_id, float X_reading, float Y_readi
   LCD_.setAxisAccels(axis_id, X_reading, Y_reading, Z_reading);
 }
 
+void UserInterface::updateSTOutcome(bool outcome) {
+  LCD_.setSTOutcome(outcome);
+}
+
 void UserInterface::testLeds() {
   std::vector<Led*> leds;
   leds.push_back(&BLUE_LED_);

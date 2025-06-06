@@ -65,6 +65,9 @@ class UserInterface {
     //Update axises readings for calibration
     void updateAxisAccels(int axis_id, float X_reading, float Y_reading, float Z_reading);
 
+    //Update the result from self-test procedure
+    void updateSTOutcome(bool outcome);
+
     /*
     Method to test functionality of all the leds in the UI. 
     Blinks all the leds 5 times in a sequence  using delay (not asynchronous function)

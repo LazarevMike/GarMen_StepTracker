@@ -1,3 +1,4 @@
+#include "Adafruit_ST77xx.h"
 #include "Lcd.h"  // Include header for Lcd class
 
 // Define display control pins
@@ -22,7 +23,9 @@ Lcd::Lcd()
       lastSwitchTime(0),
       lastBatteryTime(0),
       isRunning(true),
-      isPaused(false) {}
+      isPaused(false),
+      STOutcome(false),
+      STReceived(false) {}
 
 // Initialize the TFT display
 void Lcd::begin() {
@@ -75,6 +78,11 @@ void Lcd::setAxisAccels(int axis_id, float X_reading, float Y_reading, float Z_r
     Z_axis = Z_reading;
 }
 
+void Lcd::setSTOutcome(bool outcome) {
+    STReceived = true;
+    STOutcome = outcome;
+}
+
 // Change screen based on state (steps/stats)
 void Lcd::display(DisplayState newState) {
 
@@ -100,6 +108,9 @@ void Lcd::display(DisplayState newState) {
             break;
         case DisplayState::Calibration:
             showCalibrationScreen();
+            break; 
+        case DisplayState::SelfTest:
+            showSelfTestScreen();
             break;
     }
 
@@ -145,6 +156,7 @@ void Lcd::showStatsScreen() {
 // Draw top bar with app name, BLE status, battery, and runtime clock
 void Lcd::drawCommonUI() {
     canvas.setTextSize(2);
+    canvas.setTextColor(ST77XX_WHITE);
     canvas.setCursor(105, 20);
     canvas.print("GarMen");  // App title
 
@@ -244,4 +256,24 @@ void Lcd::showCalibrationScreen() {
 
     canvas.setCursor(180, 140);
     canvas.printf("Z:%.2f", Z_axis);
+}
+
+void Lcd::showSelfTestScreen() {
+    drawCommonUI();
+    canvas.setTextSize(2);
+    canvas.setCursor(10, 80);
+    canvas.print("Self-test in progress.");
+
+    if (STReceived) {
+        canvas.setTextSize(5);
+        canvas.setCursor(50, 140);
+        if (STOutcome) {
+            canvas.setTextColor(ST77XX_GREEN);
+            canvas.print("PASSED");
+        }
+        else {
+            canvas.setTextColor(ST77XX_RED);
+            canvas.print("FAILED");
+        }
+    }
 }

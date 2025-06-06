@@ -29,6 +29,8 @@ public:
 
   void calibrate();
 
+  void selfTest();
+
   
 
 private:

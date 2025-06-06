@@ -59,6 +59,8 @@ public:
 
     void setAxisAccels(int axis_id, float X_reading, float Y_reading, float Z_reading);
 
+    void setSTOutcome(bool outcome);
+
 private:
     static constexpr uint8_t REFRESH_HZ = 50;  // Refresh rate in Hz
     unsigned long lastRefreshTime = 0;
@@ -79,6 +81,9 @@ private:
     // Renders the calibration screen to start calibration
     void showCalibrationScreen();
 
+    // Renders the self-test screen to show results
+    void showSelfTestScreen();
+
     // Displays correct Bluetooth icon (connected or not)
     void bluetoothStateImage();
 
@@ -98,6 +103,8 @@ private:
     int batteryPercentage = 45;       // Current battery percentage (0 - 100)%
     unsigned long seconds;
     bool isPaused;
+    bool STOutcome;
+    bool STReceived;
 
     int selected_axis;
     float X_axis;
