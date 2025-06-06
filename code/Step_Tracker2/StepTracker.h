@@ -7,6 +7,7 @@
 #include <CaloriesCalculator.h>
 #include <HeartRateMonitor.h>
 #include <DisplayState.h>
+#include <Clock.h>
 
 
 class StepTracker {
@@ -34,8 +35,10 @@ private:
   StepCounter stepcounter;
   UserInterface ui;
   HeartRateMonitor heartmonitor;
+  Clock clock;
   DisplayState displaystate;
   Pace pace_;
+  
   bool isPaused;
   bool isCalibrating;
 

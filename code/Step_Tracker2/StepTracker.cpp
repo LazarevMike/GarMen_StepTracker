@@ -63,6 +63,7 @@ void StepTracker::start() {
   ui.begin();
   stepcounter.begin();
   heartmonitor.begin();
+  clock.start();
   setLeds(pace_);
 }
 
@@ -71,23 +72,26 @@ void StepTracker::reset() {
   stepcounter.reset();
   CaloriesCalculator::resetTotal();
   heartmonitor.update();
+  clock.reset();
 
-  startTimeStamp = millis();
-  pauseTimeStamp = 0;
+  // startTimeStamp = millis();
+  // pauseTimeStamp = 0;
 }
 
 void StepTracker::pause() {
   isPaused = true;
-  pauseTimeStamp += millis() - startTimeStamp;
+  //pauseTimeStamp += millis() - startTimeStamp;
+  clock.pause();
   ui.triggerBlue(1);
   ui.triggerGreen(1);
   ui.triggerOrange(1);
-  ui.updatePause(isPaused);
+  ui.updatePause(isPaused); 
 }
 
 void StepTracker::resume() {
   isPaused = false;
-  startTimeStamp = millis();
+  // startTimeStamp = millis();
+  clock.resume();
   setLeds(pace_);
   ui.updatePause(isPaused);
   update();
@@ -95,7 +99,7 @@ void StepTracker::resume() {
 
 void StepTracker::update() {
   
-  elapsedTime = (pauseTimeStamp + (millis() - startTimeStamp)) / 1000;
+  //elapsedTime = (pauseTimeStamp + (millis() - startTimeStamp)) / 1000;
   
   stepcounter.update();
   heartmonitor.update();
@@ -106,7 +110,7 @@ void StepTracker::update() {
   CaloriesCalculator::update(heartmonitor, stepcounter);
 
   ui.updateCalories(CaloriesCalculator::getTotal());
-  ui.updateTime(elapsedTime);
+  ui.updateTime(clock.getElapsedTime());
 
   if (new_pace != pace_) {
     pace_ = new_pace;
