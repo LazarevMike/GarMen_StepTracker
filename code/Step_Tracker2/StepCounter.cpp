@@ -37,7 +37,7 @@ void StepCounter::update() {
 
         // Store timestamp for step-per-minute estimation
         stepTimestamps[stepTimestampIndex] = now;
-        stepTimestampIndex = (stepTimestampIndex + 1) % 20;
+        stepTimestampIndex = (stepTimestampIndex + 1) % 200;
 
         // Update pace (Idle, Walk, Run) based on timing between steps
         updatePace(stepInterval);
@@ -121,7 +121,7 @@ int StepCounter::getStepsPerMinute() const {
     unsigned long now = millis();
     int validSteps = 0;
 
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < 200; i++) {
         if (stepTimestamps[i] != 0 && now - stepTimestamps[i] <= 60000) {
             validSteps++;
         }

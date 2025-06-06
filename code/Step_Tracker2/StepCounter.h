@@ -68,7 +68,7 @@ private:
     ADXL335 adxl;
 
     // Rolling buffer to store timestamps of recent steps (for SPM calc)
-    int stepTimestamps[20];
+    int stepTimestamps[200];
     int stepTimestampIndex;
 
     // Current pace classification
