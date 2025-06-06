@@ -2,7 +2,7 @@
 #include <Arduino.h>
 #include <StepTracker.h>
 
-StepTracker::StepTracker() : displaystate(DisplayState::Steps), pace_(Pace::IDLE), isPaused(false), pauseTimeStamp(0), startTimeStamp(0){
+StepTracker::StepTracker() : displaystate(DisplayState::Steps), pace_(Pace::IDLE), isPaused(false) {
 
 }
 
@@ -51,7 +51,7 @@ void StepTracker::run() {
     }
   }
 
-  if (ui.isResetPressed()) {
+  if (ui.isResetHeld()) {
     reset();
   }
   }
@@ -73,14 +73,10 @@ void StepTracker::reset() {
   CaloriesCalculator::resetTotal();
   heartmonitor.update();
   clock.reset();
-
-  // startTimeStamp = millis();
-  // pauseTimeStamp = 0;
 }
 
 void StepTracker::pause() {
   isPaused = true;
-  //pauseTimeStamp += millis() - startTimeStamp;
   clock.pause();
   ui.triggerBlue(1);
   ui.triggerGreen(1);
@@ -90,7 +86,6 @@ void StepTracker::pause() {
 
 void StepTracker::resume() {
   isPaused = false;
-  // startTimeStamp = millis();
   clock.resume();
   setLeds(pace_);
   ui.updatePause(isPaused);
@@ -98,9 +93,6 @@ void StepTracker::resume() {
 }
 
 void StepTracker::update() {
-  
-  //elapsedTime = (pauseTimeStamp + (millis() - startTimeStamp)) / 1000;
-  
   stepcounter.update();
   heartmonitor.update();
   ui.updateBluetoothStatus(heartmonitor.isConnected());

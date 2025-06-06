@@ -29,31 +29,28 @@ public:
 
   void calibrate();
 
-  float getMagnitude();
+  
 
 private:
+  // Modules of steptracker
   StepCounter stepcounter;
   UserInterface ui;
   HeartRateMonitor heartmonitor;
   Clock clock;
-  DisplayState displaystate;
-  Pace pace_;
   
+  // State controls
   bool isPaused;
   bool isCalibrating;
+  DisplayState displaystate;
+  Pace pace_;
 
-  // Timer controls
-  unsigned long elapsedTime;
-  unsigned long startTimeStamp;
-  unsigned long pauseTimeStamp;
-  unsigned long pausedTime;
-
+  // Calibration controls
   unsigned long lastCalibPress;
-
   int selected_axis;
 
 
   void setLeds(Pace pace);
+  float getMagnitude();
   
 };
 

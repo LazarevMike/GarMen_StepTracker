@@ -76,6 +76,7 @@ class UserInterface {
     bool isResetPressed();
     bool isStartPressed();
     bool isCalibPressed();
+    bool isResetHeld();
     std::vector<bool> buttonsStates();
 
     bool getResetState();

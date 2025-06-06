@@ -115,6 +115,10 @@ bool UserInterface::isCalibPressed() {
   return CALIB_BTN_.isPressed();
 }
 
+bool UserInterface::isResetHeld() {
+  return RESET_BTN_.isHeld();
+}
+
 std::vector<bool> UserInterface::buttonsStates() {
   std::vector<bool> states;
   states.push_back(getResetState());
