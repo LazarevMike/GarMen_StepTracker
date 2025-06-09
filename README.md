@@ -52,7 +52,7 @@ Before compiling and uploading, make sure the following Arduino libraries are in
 ## 📁 Folder Structure
 
 ```text
-/Step_Tracker/
+code/Step_Tracker/
 │
 ├── Step_Tracker.ino               # Main Arduino sketch (initializes and runs StepTracker)
 │
