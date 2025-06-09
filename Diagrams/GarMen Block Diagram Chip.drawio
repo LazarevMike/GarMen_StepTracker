@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Safari/605.1.15" version="26.1.0">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36" version="27.1.4">
   <diagram name="Page-1" id="90a13364-a465-7bf4-72fc-28e22215d7a0">
-    <mxGraphModel dx="1026" dy="2445.5" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1.5" pageWidth="1654" pageHeight="1169" background="none" math="0" shadow="0">
+    <mxGraphModel dx="1747" dy="2773.5" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1.5" pageWidth="1654" pageHeight="1169" background="none" math="0" shadow="0">
       <root>
         <mxCell id="0" style=";html=1;" />
         <mxCell id="1" style=";html=1;" parent="0" />
@@ -289,7 +289,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="sVlvc_ys_ApM5D9SjPhR-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="sVlvc_ys_ApM5D9SjPhR-1" target="W3gF5fgbdOcZ_mwXXCGC-46">
+        <mxCell id="sVlvc_ys_ApM5D9SjPhR-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="sVlvc_ys_ApM5D9SjPhR-1" target="W3gF5fgbdOcZ_mwXXCGC-46" edge="1">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="531" y="1260" />
@@ -298,8 +298,39 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="sVlvc_ys_ApM5D9SjPhR-1" value="USB-C +5VBUS" style="whiteSpace=wrap;html=1;shadow=1;fontSize=18;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+        <mxCell id="sVlvc_ys_ApM5D9SjPhR-1" value="USB-C +5VBUS" style="whiteSpace=wrap;html=1;shadow=1;fontSize=18;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" vertex="1">
           <mxGeometry x="411" y="1231" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="TpfaN4ngw0G7LP9bGfSy-1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="1590" y="680" width="245" height="154" as="geometry" />
+        </mxCell>
+        <mxCell id="TpfaN4ngw0G7LP9bGfSy-3" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;Additional&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;Components&lt;/font&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="1730" y="624" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="TpfaN4ngw0G7LP9bGfSy-5" value="Heart Rate Monitor" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1710" y="727" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="TpfaN4ngw0G7LP9bGfSy-6" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1610" y="754" as="sourcePoint" />
+            <mxPoint x="1710" y="754" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="TpfaN4ngw0G7LP9bGfSy-9" value="Bluetooth In" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="TpfaN4ngw0G7LP9bGfSy-6">
+          <mxGeometry x="-0.852" relative="1" as="geometry">
+            <mxPoint x="13" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="TpfaN4ngw0G7LP9bGfSy-10" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1310" y="1140" as="sourcePoint" />
+            <mxPoint x="1420" y="1140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="TpfaN4ngw0G7LP9bGfSy-11" value="Bluetooth Out" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="TpfaN4ngw0G7LP9bGfSy-10">
+          <mxGeometry x="-0.1744" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
