@@ -1,15 +1,16 @@
 # Step_Tracker_EMS_2025
 
 Code for step tracker for Embedded Mechatronic Systems (Autumn 2025) at UTS.  
-Using Arduino Nano ESP32 and a custom-designed PCB in Altium Designer.
+Using ESP32S3 Mini and a custom-designed PCB in Altium Designer.
+Programmed on C++ in Arduino IDE
 
-![Step Tracker System](assets/step_tracker_banner.png)
+![alt text](GarMen.JPG)
 
 ---
 
 ## 📌 Project Overview
 
-This repository contains the Arduino code for the **Step Tracker System** using the ADXL335 accelerometer and a custom PCB shield for the Arduino UNO R3.  
+This repository contains the Arduino code, simulation files and MCAD for the **Step Tracker System** using custom designed PCB, featuring ESP32S3 Mini ship and ADXL335 accelerometer.
 The system counts steps, identifies walking pace, monitors heart rate and calories, and provides a clean user interface using an LCD screen.
 
 ---
@@ -53,12 +54,18 @@ Before compiling and uploading, make sure the following Arduino libraries are in
 ```text
 /Step_Tracker/
 │
-├── StepTrackerProject.ino         # Main Arduino sketch (setup and loop)
-├── SensorManager.cpp/.h           # Manages accelerometer readings and filtering
-├── StepCounter.cpp/.h             # Step detection and pace classification logic
-├── CaloriesCalculator.cpp/.h      # Calorie computation based on HR and weight
-├── HeartRateMonitor.cpp/.h        # BLE client for heart rate monitor devices
-├── DisplayManager.cpp/.h          # UI and screen switching (Steps/Stats)
-├── Lcd.cpp/.h                     # LCD screen control using Adafruit or TFT_eSPI
-├── StepThresholdCalibrator.cpp/.h# Threshold learning system for walking/running
-└── Config.h                       # Configuration constants
+├── Step_Tracker.ino               # Main Arduino sketch (initializes and runs StepTracker)
+│
+├── StepTracker.cpp/.h            # Core system controller (coordinates sensors, UI, and states)
+├── StepCounter.cpp/.h            # Step detection, step rate, and pace estimation
+├── CaloriesCalculator.cpp/.h     # Calorie calculation based on heart rate and step data
+├── HeartRateMonitor.cpp/.h       # BLE heart rate monitor interface and data parser
+├── ADXL335.cpp/.h                # Accelerometer driver (data reading, calibration, self-test)
+├── Clock.cpp/.h                  # Tracks elapsed runtime using millis()
+│
+├── Button.cpp/.h                 # Debounced button input handler
+├── Led.cpp/.h                    # RGB LED control based on pace or test outcomes
+├── Lcd.cpp/.h                    # LCD display manager using Adafruit ST7789
+├── UserInterface.cpp/.h          # High-level UI controller (button handling, display updates)
+├── DisplayState.h                # Enum for UI display modes (Steps, Calibration, SelfTest, etc.)
+└── media/                        # Folder for images, fonts, or other display assets
