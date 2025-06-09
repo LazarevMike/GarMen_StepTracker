@@ -1,4 +1,4 @@
-# Step_Tracker_EMS_2025
+# GarMen StepTracker
 
 Code for step tracker for Embedded Mechatronic Systems (Autumn 2025) at UTS.  
 Using ESP32S3 Mini and a custom-designed PCB in Altium Designer.
@@ -64,8 +64,8 @@ code/Step_Tracker/
 ├── Clock.cpp/.h                  # Tracks elapsed runtime using millis()
 │
 ├── Button.cpp/.h                 # Debounced button input handler
-├── Led.cpp/.h                    # RGB LED control based on pace or test outcomes
+├── Led.cpp/.h                    # LED driver with state control 
 ├── Lcd.cpp/.h                    # LCD display manager using Adafruit ST7789
 ├── UserInterface.cpp/.h          # High-level UI controller (button handling, display updates)
-├── DisplayState.h                # Enum for UI display modes (Steps, Calibration, SelfTest, etc.)
+├── DisplayState.h                # Enum for UI display modes (Steps, Stats, Calibration, SelfTest)
 └── media/                        # Folder for images, fonts, or other display assets
