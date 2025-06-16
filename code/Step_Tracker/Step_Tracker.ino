@@ -1,9 +1,13 @@
-void setup() {
-  // put your setup code here, to run once:
+#include <Arduino.h>
+#include "StepTracker.h"
 
+// Required modules
+StepTracker steptracker;
+
+void setup() {
+  steptracker.start();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-
+  steptracker.run();
 }
